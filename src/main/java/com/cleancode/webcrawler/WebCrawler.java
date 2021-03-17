@@ -1,0 +1,100 @@
+package com.cleancode.webcrawler;
+
+import org.jsoup.HttpStatusException;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class WebCrawler {
+    private static final int HTTP_NOT_FOUND_STATUS = 404;
+
+    private URL startUrl;
+    private int maxDepth;
+
+    private Set<URL> visitedUrls = new HashSet<>();
+    private List<URL> notFoundUrls = new ArrayList<>();
+    private List<Page> pages = new ArrayList<>();
+
+    public WebCrawler(URL startUrl){
+        this.startUrl = startUrl;
+        this.maxDepth = 2;
+    }
+
+    public WebCrawler(URL startUrl, int maxDepth){
+        this.startUrl = startUrl;
+        this.maxDepth = maxDepth;
+    }
+
+    public void crawl(){
+        crawlRecursive(startUrl, 0);
+    }
+
+    private boolean hasExceededMaxDepth(int depth){
+        return depth > maxDepth;
+    }
+
+    private boolean isVisitedUrl(URL url){
+        return visitedUrls.contains(url);
+    }
+
+    private boolean isNotFoundError(HttpStatusException exception){
+        return exception.getStatusCode() == HTTP_NOT_FOUND_STATUS;
+    }
+
+    private Page getPage(URL url) {
+        try {
+            return new Page(url);
+        } catch(HttpStatusException e) {
+            if (isNotFoundError(e)){
+                notFoundUrls.add(url);
+            }
+        } catch (IOException e) {}
+        return null;
+    }
+
+    private void crawlLinkedPages(Page page, int depth){
+        page.getLinkedUrls().forEach(
+            (linkedUrl) -> crawlRecursive(linkedUrl, depth + 1)
+        );
+    }
+
+    private void crawlRecursive(URL url, int depth) {
+        if (hasExceededMaxDepth(depth) || isVisitedUrl(url)){
+            return;
+        }
+
+        visitedUrls.add(url);
+
+        Page page = getPage(url);
+        if (page != null){
+            pages.add(page);
+            crawlLinkedPages(page, depth);
+        }
+    }
+
+    private void printValidPageStatsTo(PrintStream outputStream){
+        outputStream.println("Crawler Stats\n");
+
+        pages.forEach(
+            (page) -> outputStream.println(page.toString())
+        );
+    }
+
+    private void printBrokenLinksTo(PrintStream outputStream){
+        outputStream.println("\nBroken Links\n");
+
+        notFoundUrls.forEach(
+            (url) -> outputStream.println(url.toString())
+        );
+    }
+
+    public void printStatsTo(PrintStream outputStream){
+        printValidPageStatsTo(outputStream);
+        printBrokenLinksTo(outputStream);
+    }
+}
