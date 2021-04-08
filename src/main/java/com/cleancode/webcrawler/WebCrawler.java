@@ -34,11 +34,11 @@ public class WebCrawler {
         crawlRecursive(startUrl, 0);
     }
 
-    private boolean hasExceededMaxDepth(int depth){
+    boolean hasExceededMaxDepth(int depth){
         return depth > maxDepth;
     }
 
-    private boolean isVisitedUrl(URL url){
+    boolean isVisitedUrl(URL url){
         return visitedUrls.contains(url);
     }
 
@@ -46,7 +46,7 @@ public class WebCrawler {
         return exception.getStatusCode() == HTTP_NOT_FOUND_STATUS;
     }
 
-    private Page getPage(URL url) {
+    Page getPage(URL url) {
         try {
             return new Page(url);
         } catch(HttpStatusException e) {
@@ -63,7 +63,7 @@ public class WebCrawler {
         );
     }
 
-    private void crawlRecursive(URL url, int depth) {
+    void crawlRecursive(URL url, int depth) {
         if (hasExceededMaxDepth(depth) || isVisitedUrl(url)){
             return;
         }
@@ -96,5 +96,9 @@ public class WebCrawler {
     public void printStatsTo(PrintStream outputStream){
         printValidPageStatsTo(outputStream);
         printBrokenLinksTo(outputStream);
+    }
+
+    List<URL> getNotFoundUrls() {
+        return notFoundUrls;
     }
 }

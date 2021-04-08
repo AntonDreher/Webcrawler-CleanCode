@@ -56,4 +56,20 @@ public class PageStats {
     public String toString() {
         return String.format("%s words, %s links, %s images, %s videos", words, links, images, videos);
     }
+
+    int getWords() {
+        return words;
+    }
+
+    int getLinks() {
+        return links;
+    }
+
+    int getImages() {
+        return images;
+    }
+
+    int getVideos() {
+        return videos;
+    }
 }

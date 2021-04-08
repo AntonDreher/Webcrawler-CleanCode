@@ -25,7 +25,7 @@ public class Page {
         this.stats = new PageStats(document);
     }
 
-    private URL getAbsoluteUrl(String uri){
+    URL getAbsoluteUrl(String uri){
         try {
             if (new URI(uri).isAbsolute()){
                 return new URL(uri);
@@ -37,7 +37,7 @@ public class Page {
         }
     }
 
-    public Set<URL> getLinkedUrls(){
+    Set<URL> getLinkedUrls(){
         Elements links = document.select(PageStats.LINK_TAG + PageStats.EXCLUDE_SAME_PAGE_LINKS);
         List<String> uris = links.eachAttr("href");
         return uris.stream().map(this::getAbsoluteUrl).filter(Objects::nonNull).collect(Collectors.toSet());
@@ -45,6 +45,10 @@ public class Page {
 
     private void getDocument() throws IOException {
         this.document = HttpConnection.connect(url).get();
+    }
+
+    void setDocument(Document document){
+        this.document = document;
     }
 
     @Override
