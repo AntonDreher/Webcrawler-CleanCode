@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Webcrawler" />
         <module name="Webcrawler-CleanCode" />
+        <module name="Webcrawler" />
       </profile>
     </annotationProcessing>
   </component>
