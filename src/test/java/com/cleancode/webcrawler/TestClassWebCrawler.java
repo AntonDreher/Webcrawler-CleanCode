@@ -64,13 +64,9 @@ public class TestClassWebCrawler {
 
     @Test
     public void testVisitedURLTrue(){
-        crawlerDepthZero.crawl();
-        assertTrue(crawlerDepthZero.isVisitedUrl(standardTestUrl));
-    }
-
-    @Test
-    public void testVisitedURLTrueAndExceededMaxDepth(){
-        // TODO: if (hasExceededMaxDepth(depth) || isVisitedUrl(url)) 1 Branch missing
+        crawlerDepthTwo.crawlRecursive(standardTestUrl, 0);
+        crawlerDepthTwo.crawlRecursive(standardTestUrl, 1);
+        assertTrue(crawlerDepthTwo.isVisitedUrl(standardTestUrl));
     }
 
     @Test
