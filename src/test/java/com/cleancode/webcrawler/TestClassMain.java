@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestClassMain {
     public final static String validURL = "https://www.google.com/";
     public final static String invalidURL = "www...google.com";
-    public final static String validPath = "/dev/null";
+    public final static String validPath = System.getProperty("os.name").startsWith("Windows") ? "NUL" : "/dev/null";
     public final static String invalidPath = "/x/y";
 
     private<T> void testSystemExitIsCalledWith(Consumer<T> function, T argument, int expectedStatus){
