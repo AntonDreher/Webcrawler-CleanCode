@@ -7,15 +7,19 @@ import java.net.URL;
 
 public class Main {
     public static void main(String[] args) {
-        if (args.length < 1){
-            System.err.println("Usage: webcrawler URL [FILE]");
-            System.exit(1);
-        }
+        validateArgsLength(args);
         URL startUrl = getStartUrlFromArgs(args);
         PrintStream output = getPrintStreamFromArgs(args);
         WebCrawler webCrawler = new WebCrawler(startUrl);
         webCrawler.crawl();
         webCrawler.printStatsTo(output);
+    }
+
+    static void validateArgsLength(String[] args){
+        if (args.length < 1 || args.length > 2){
+            System.err.println("Usage: webcrawler URL [FILE]");
+            System.exit(1);
+        }
     }
 
     static URL getStartUrlFromArgs(String[] args){
