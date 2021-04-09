@@ -101,4 +101,8 @@ public class WebCrawler {
     List<URL> getNotFoundUrls() {
         return notFoundUrls;
     }
+
+    Set<URL> getVisitedUrls() {
+        return visitedUrls;
+    }
 }

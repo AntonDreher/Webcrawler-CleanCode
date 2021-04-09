@@ -3,24 +3,27 @@ package com.cleancode.webcrawler;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestClassPage {
-    private static URL standardTestUrl;
     private static Page testPage;
-    private static String STANDARD_URL_TO_TEST = "https://www.google.com/";
+    public static final String STANDARD_URL_TO_TEST = "https://www.google.com/";
+    private static URL standardTestUrl;
 
-    @BeforeAll
-    public static void init() throws IOException {
-        //As we cannot mock final classes, this is a workaround for mocking
+    @BeforeEach
+    public void init() throws IOException {
+        MockConnection connection = new MockConnection(STANDARD_URL_TO_TEST);
+        connection.setDocument(getDocumentFromHTMLFile("src/test/resources/linkList.html"));
         standardTestUrl = new URL(STANDARD_URL_TO_TEST);
         testPage = new Page(standardTestUrl);
     }
@@ -38,9 +41,9 @@ public class TestClassPage {
     }
 
     @Test
-    public void testGetAbsoulteUrlInvalid(){
+    public void testGetAbsoluteUrlInvalid(){
         String invalidURL = "htt://www...123...";
-        assertEquals(null, testPage.getAbsoluteUrl(invalidURL));
+        assertNull(testPage.getAbsoluteUrl(invalidURL));
     }
 
     @Test
@@ -51,22 +54,10 @@ public class TestClassPage {
 
     @Test
     public void testLinksInHTMLFile() {
-        try {
-            testPage.setDocument(getDocumentFromHTMLFile("src/test/resources/linkList.html"));
-            assertEquals(3, testPage.getLinkedUrls().size());
-        }catch (IOException e){
-            fail("could not open HTML file");
-        }
+        assertEquals(3, testPage.getLinkedUrls().size());
     }
 
-    private Document getDocumentFromHTMLFile(String fileLocation) throws IOException {
-        FileReader fileReader = new FileReader(fileLocation);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        StringBuilder contentOfFile = new StringBuilder(3);
-        String s;
-        while((s=bufferedReader.readLine()) != null){
-            contentOfFile.append(s);
-        }
-        return Jsoup.parse(contentOfFile.toString());
+    static Document getDocumentFromHTMLFile(String fileLocation) throws IOException {
+        return Jsoup.parse(Files.readString(Path.of(fileLocation)));
     }
 }

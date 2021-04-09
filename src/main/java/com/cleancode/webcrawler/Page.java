@@ -47,10 +47,6 @@ public class Page {
         this.document = HttpConnection.connect(url).get();
     }
 
-    void setDocument(Document document){
-        this.document = document;
-    }
-
     @Override
     public String toString() {
         return String.format("%s: %s", url.toString(), stats.toString());
