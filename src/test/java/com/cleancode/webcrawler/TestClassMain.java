@@ -33,6 +33,20 @@ public class TestClassMain {
         }
     }
 
+    private<T> void testNoSystemExitIsCalled(Consumer<T> function, T argument){
+        SecurityManager initialSecurityManger = System.getSecurityManager();
+        try {
+            System.setErr(new PrintStream(OutputStream.nullOutputStream()));
+            System.setSecurityManager(new NoExitSecurityManager());
+            function.accept(argument);
+        } catch (ExitException e) {
+            fail("Unexpected call to System.exit()");
+        } finally {
+            System.setErr(System.err);
+            System.setSecurityManager(initialSecurityManger);
+        }
+    }
+
     @Test
     public void testGetStartUrlFromArgsInvalidURLCallsSystemExit(){
         testSystemExitIsCalledWith(
@@ -53,18 +67,20 @@ public class TestClassMain {
 
     @Test
     public void testGetStartUrlFromArgsValidURL() throws MalformedURLException {
+        testNoSystemExitIsCalled(Main::getStartUrlFromArgs, new String[]{validURL});
         Assertions.assertEquals(new URL(validURL), Main.getStartUrlFromArgs(new String[]{validURL}));
     }
 
     @Test
     public void testGetPrintStreamFromArgsNoPath(){
+        testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURL});
         Assertions.assertEquals(System.out, Main.getPrintStreamFromArgs(new String[]{validURL}));
     }
 
     @Test
     public void testGetPrintStreamFromArgsValidPath() {
-        PrintStream printStream = Main.getPrintStreamFromArgs(new String[]{validURL, validPath});
-        Assertions.assertNotNull(printStream);
+        testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURL, validPath});
+        Assertions.assertNotNull(Main.getPrintStreamFromArgs(new String[]{validURL, validPath}));
     }
 
     @Test
@@ -77,16 +93,23 @@ public class TestClassMain {
     }
 
     @Test
+    public void testValidateArgsLengthOneArguments() {
+        testNoSystemExitIsCalled(Main::validateArgsLength, new String[]{validURL});
+        assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURL}));
+    }
+
+    @Test
+    public void testValidateArgsLengthTwoArguments() {
+        testNoSystemExitIsCalled(Main::validateArgsLength, new String[]{validURL, validPath});
+        assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURL, validPath}));
+    }
+
+    @Test
     public void testValidateArgsLengthThreeArguments() {
         testSystemExitIsCalledWith(
                 Main::validateArgsLength,
                 new String[]{validURL, validPath, "extra"},
                 1
         );
-    }
-
-    @Test
-    public void testValidateArgsLengthTwoArguments() {
-        assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURL, validPath}));
     }
 }
