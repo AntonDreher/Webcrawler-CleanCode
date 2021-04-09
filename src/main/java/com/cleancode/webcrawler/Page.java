@@ -19,9 +19,11 @@ public class Page {
     private Document document;
     private PageStats stats;
 
+    public static final String LINK_REFERENCE_ATTRIBUTE = "href";
+
     public Page(URL url) throws IOException {
         this.url = url;
-        getDocument();
+        setDocument();
         this.stats = new PageStats(document);
     }
 
@@ -39,11 +41,14 @@ public class Page {
 
     Set<URL> getLinkedUrls(){
         Elements links = document.select(PageStats.LINK_TAG + PageStats.EXCLUDE_SAME_PAGE_LINKS);
-        List<String> uris = links.eachAttr("href");
-        return uris.stream().map(this::getAbsoluteUrl).filter(Objects::nonNull).collect(Collectors.toSet());
+        List<String> uris = links.eachAttr(LINK_REFERENCE_ATTRIBUTE);
+        return uris.stream()
+                .map(this::getAbsoluteUrl)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
-    private void getDocument() throws IOException {
+    private void setDocument() throws IOException {
         this.document = HttpConnection.connect(url).get();
     }
 

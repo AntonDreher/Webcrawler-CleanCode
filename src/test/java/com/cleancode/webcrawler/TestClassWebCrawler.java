@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -67,6 +66,11 @@ public class TestClassWebCrawler {
     public void testVisitedURLTrue(){
         crawlerDepthZero.crawl();
         assertTrue(crawlerDepthZero.isVisitedUrl(standardTestUrl));
+    }
+
+    @Test
+    public void testVisitedURLTrueAndExceededMaxDepth(){
+        // TODO: if (hasExceededMaxDepth(depth) || isVisitedUrl(url)) 1 Branch missing
     }
 
     @Test

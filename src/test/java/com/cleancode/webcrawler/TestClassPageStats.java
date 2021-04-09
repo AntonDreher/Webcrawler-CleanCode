@@ -1,83 +1,41 @@
 package com.cleancode.webcrawler;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class TestClassPageStats {
+    private PageStats statsTest;
 
-    @Test
-    public void testCountOneImage(){
-        Document documentOnlyImageTag = Jsoup.parse("<img>test.png</img>");
-        PageStats statsTest = new PageStats(documentOnlyImageTag);
-        assertEquals(1, statsTest.getImages());
+    @BeforeEach
+    public void setup() throws IOException {
+        Document document = TestClassPage.getDocumentFromHTMLFile("src/test/resources/testHTML.html");
+        statsTest = new PageStats(document);
     }
 
     @Test
-    public void testCountMultipleImages(){
-        Document documentMultipleImageTags = Jsoup.parse("<img>test.png</img>" +
-                                                            "<img>test.png</img>"+
-                                                            "<img>test.png</img>" +
-                                                            "<img>test.png</img>" +
-                                                            "<img>test.png</img>");
-        PageStats statsTest = new PageStats(documentMultipleImageTags);
-
-        assertEquals(5, statsTest.getImages());
+    public void testCountImages() throws IOException {
+        assertEquals(2, statsTest.getImageCount());
     }
 
     @Test
-    public void testCountOneVideo(){
-        Document document = Jsoup.parse("<video width=\"320\" height=\"240\" controls>\n" +
-                                            "  <source src=\"movie.mp4\" type=\"video/mp4\">\n" +
-                                            "</video>");
-        PageStats statsVideoTest = new PageStats(document);
-        assertEquals(1, statsVideoTest.getVideos());
+    public void testCountVideos(){
+        assertEquals(1, statsTest.getVideoCount());
     }
 
     @Test
-    public void testCountMultipleVideos(){
-        Document document = Jsoup.parse("<video width=\"320\" height=\"240\" controls>\n" +
-                                              "  <source src=\"movie.mp4\" type=\"video/mp4\">\n" +
-                                            "</video>" +
-                                            "<video width=\"320\" height=\"240\" controls>\n" +
-                                            "  <source src=\"movie.mp4\" type=\"video/mp4\">\n" +
-                                            "</video>");
-        PageStats statsVideoTest = new PageStats(document);
-        assertEquals(2, statsVideoTest.getVideos());
+    public void testCountLinks() {
+        assertEquals(3, statsTest.getLinkCount());
     }
 
     @Test
-    public void testCountOneLink(){
-        Document documentOneLinkTag = Jsoup.parse("<a>link</a>");
-        PageStats statsLinkTest = new PageStats(documentOneLinkTag);
-        assertEquals(1, statsLinkTest.getLinks());
-    }
-
-    @Test
-    public void testCountMultipleLinks(){
-        Document documentOneLinkTag = Jsoup.parse("<a>link</a>" +
-                                                        "<a>link</a>"+
-                                                        "<a>link</a>"+
-                                                        "<a>link</a>");
-        PageStats statsLinkTest = new PageStats(documentOneLinkTag);
-        assertEquals(4, statsLinkTest.getLinks());
-    }
-
-    @Test
-    public void testCountWordsWithoutTags(){
-        Document documentWordsWithoutTag = Jsoup.parse("one two three");
-        PageStats statsWordTest = new PageStats(documentWordsWithoutTag);
-        assertEquals(3, statsWordTest.getWords());
-    }
-
-    @Test
-    public void testCountWordsWithTags(){
-        Document documentWordsWithTag= Jsoup.parse("<b>one two</b>");
-        PageStats statsWordTest = new PageStats(documentWordsWithTag);
-        assertEquals(2, statsWordTest.getWords());
+    public void testCountWords(){
+        assertEquals(11, statsTest.getWordCount());
     }
 
 }

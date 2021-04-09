@@ -23,7 +23,7 @@ public class TestClassPage {
     @BeforeEach
     public void init() throws IOException {
         MockConnection connection = new MockConnection(STANDARD_URL_TO_TEST);
-        connection.setDocument(getDocumentFromHTMLFile("src/test/resources/linkList.html"));
+        connection.setDocument(getDocumentFromHTMLFile("src/test/resources/testHTML.html"));
         standardTestUrl = new URL(STANDARD_URL_TO_TEST);
         testPage = new Page(standardTestUrl);
     }

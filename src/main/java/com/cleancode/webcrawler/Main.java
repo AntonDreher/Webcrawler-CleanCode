@@ -18,7 +18,7 @@ public class Main {
         webCrawler.printStatsTo(output);
     }
 
-    private static URL getStartUrlFromArgs(String[] args){
+    static URL getStartUrlFromArgs(String[] args){
         URL startUrl = null;
         try {
             startUrl = new URL(args[0]);
@@ -29,7 +29,7 @@ public class Main {
         return startUrl;
     }
 
-    private static PrintStream getPrintStreamFromArgs(String[] args){
+    static PrintStream getPrintStreamFromArgs(String[] args){
         PrintStream output = System.out;
         if (args.length >= 2){
             try {

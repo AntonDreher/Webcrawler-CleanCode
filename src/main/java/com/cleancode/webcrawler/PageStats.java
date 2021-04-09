@@ -7,10 +7,10 @@ import java.util.StringTokenizer;
 
 public class PageStats {
     private Document document;
-    private int words;
-    private int links;
-    private int images;
-    private int videos;
+    private int wordCount;
+    private int linkCount;
+    private int imageCount;
+    private int videoCount;
 
     final static String LINK_TAG = "a";
     final static String EXCLUDE_SAME_PAGE_LINKS = ":not([href^=#])";
@@ -32,7 +32,7 @@ public class PageStats {
     private void countWords(){
         String text = document.text();
         StringTokenizer tokenizer = new StringTokenizer(text);
-        words = tokenizer.countTokens();
+        wordCount = tokenizer.countTokens();
     }
 
     private int countTagElements(String tag){
@@ -41,35 +41,35 @@ public class PageStats {
     }
 
     private void countLinks(){
-        this.links = countTagElements(LINK_TAG + EXCLUDE_SAME_PAGE_LINKS);
+        this.linkCount = countTagElements(LINK_TAG + EXCLUDE_SAME_PAGE_LINKS);
     }
 
     private void countImages(){
-        this.images = countTagElements(IMAGE_TAG);
+        this.imageCount = countTagElements(IMAGE_TAG);
     }
 
     private void countVideos(){
-        this.videos = countTagElements(VIDEO_TAG);
+        this.videoCount = countTagElements(VIDEO_TAG);
     }
 
     @Override
     public String toString() {
-        return String.format("%s words, %s links, %s images, %s videos", words, links, images, videos);
+        return String.format("%s words, %s links, %s images, %s videos", wordCount, linkCount, imageCount, videoCount);
     }
 
-    int getWords() {
-        return words;
+    int getWordCount() {
+        return wordCount;
     }
 
-    int getLinks() {
-        return links;
+    int getLinkCount() {
+        return linkCount;
     }
 
-    int getImages() {
-        return images;
+    int getImageCount() {
+        return imageCount;
     }
 
-    int getVideos() {
-        return videos;
+    int getVideoCount() {
+        return videoCount;
     }
 }
