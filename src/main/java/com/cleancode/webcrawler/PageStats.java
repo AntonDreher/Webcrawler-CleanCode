@@ -54,7 +54,7 @@ public class PageStats {
 
     @Override
     public String toString() {
-        return String.format("%s words, %s links, %s images, %s videos", wordCount, linkCount, imageCount, videoCount);
+        return String.format("%s word(s), %s link(s), %s image(s), %s video(s)", wordCount, linkCount, imageCount, videoCount);
     }
 
     int getWordCount() {

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class TestClassPageStats {
@@ -19,7 +20,7 @@ public class TestClassPageStats {
     }
 
     @Test
-    public void testCountImages() throws IOException {
+    public void testCountImages() {
         assertEquals(2, statsTest.getImageCount());
     }
 
@@ -38,4 +39,8 @@ public class TestClassPageStats {
         assertEquals(11, statsTest.getWordCount());
     }
 
+    @Test
+    public void testToString() {
+        assertEquals("11 word(s), 3 link(s), 2 image(s), 1 video(s)", statsTest.toString());
+    }
 }

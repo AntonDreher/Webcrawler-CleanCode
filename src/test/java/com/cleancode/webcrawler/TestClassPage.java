@@ -57,6 +57,11 @@ public class TestClassPage {
         assertEquals(3, testPage.getLinkedUrls().size());
     }
 
+    @Test
+    public void testToString(){
+        assertTrue(testPage.toString().startsWith(standardTestUrl.toString()));
+    }
+
     static Document getDocumentFromHTMLFile(String fileLocation) throws IOException {
         return Jsoup.parse(Files.readString(Path.of(fileLocation)));
     }

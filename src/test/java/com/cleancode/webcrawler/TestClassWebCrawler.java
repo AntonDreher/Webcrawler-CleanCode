@@ -5,11 +5,13 @@ import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestClassWebCrawler {
@@ -98,5 +100,39 @@ public class TestClassWebCrawler {
 
         assertFalse(crawlerDepthZero.getNotFoundUrls().contains(invalidURL));
         assertTrue(crawlerDepthZero.getVisitedUrls().contains(invalidURL));
+    }
+
+    @Test
+    public void testPrintStatsTo() throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        connection.setDocument(TestClassPage.getDocumentFromHTMLFile("src/test/resources/testHTML.html"));
+
+        crawlerDepthZero.crawl();
+
+        crawlerDepthZero.printStatsTo(printStream);
+        assertEquals(
+                "Crawler Stats\n\n" +
+                "https://www.google.com: 11 word(s), 3 link(s), 2 image(s), 1 video(s)\n\n" +
+                "Broken Links\n\n",
+                outputStream.toString()
+        );
+    }
+
+    @Test
+    public void testPrintStatsToWithBrokenLink() throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        connection.setThrows(new HttpStatusException("Error 404", 404, standardTestUrl.toString()));
+
+        crawlerDepthZero.crawl();
+
+        crawlerDepthZero.printStatsTo(printStream);
+        assertEquals(
+                "Crawler Stats\n\n\n" +
+                        "Broken Links\n\n" +
+                        standardTestUrl + "\n",
+                outputStream.toString()
+        );
     }
 }
