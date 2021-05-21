@@ -1,6 +1,6 @@
 package com.cleancode.webcrawler;
 
-import org.jsoup.HttpStatusException;
+import com.cleancode.webcrawler.document.HttpStatusException;
 
 import java.io.IOException;
 import java.io.PrintStream;

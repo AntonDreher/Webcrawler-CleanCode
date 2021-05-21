@@ -1,7 +1,5 @@
 package com.cleancode.webcrawler.document;
 
-import org.jsoup.HttpStatusException;
-
 import java.io.IOException;
 import java.net.URL;
 
