@@ -96,12 +96,12 @@ public class TestClassWebCrawler {
         crawlerDepthZero.crawl();
 
         crawlerDepthZero.printStatsTo(printStream);
-        assertEquals(
-                "Crawler Stats\n\n" +
-                        "https://www.google.com: 11 word(s), 3 link(s), 2 image(s), 1 video(s)\n\n" +
-                        "Broken Links\n\n",
-                outputStream.toString()
+        String expectedOutput = String.format(
+                "Crawler Stats%n%n" +
+                        "%s: 11 word(s), 3 link(s), 2 image(s), 1 video(s)%n%n" +
+                        "Broken Links%n%n", standardTestUrl
         );
+        assertEquals(expectedOutput, outputStream.toString());
     }
 
     @Test
@@ -113,11 +113,11 @@ public class TestClassWebCrawler {
         crawlerDepthZero.crawl();
 
         crawlerDepthZero.printStatsTo(printStream);
-        assertEquals(
-                "Crawler Stats\n\n\n" +
-                        "Broken Links\n\n" +
-                        standardTestUrl + "\n",
-                outputStream.toString()
+        String expectedOutput = String.format(
+                "Crawler Stats%n%n%n" +
+                        "Broken Links%n%n" +
+                        "%s%n", standardTestUrl
         );
+        assertEquals(expectedOutput, outputStream.toString());
     }
 }
