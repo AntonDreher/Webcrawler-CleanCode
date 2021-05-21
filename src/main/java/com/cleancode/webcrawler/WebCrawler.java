@@ -81,7 +81,7 @@ public class WebCrawler {
     }
 
     private void printValidPageStatsTo(PrintStream outputStream) {
-        outputStream.printf("Crawler Stats%n%n");
+        outputStream.printf("Stats for " + startUrl.toString() + "%n%n");
 
         pages.forEach(
                 (page) -> outputStream.println(page.toString())
@@ -96,7 +96,7 @@ public class WebCrawler {
         );
     }
 
-    public void printStatsTo(PrintStream outputStream) {
+    public synchronized void printStatsTo(PrintStream outputStream) {
         printValidPageStatsTo(outputStream);
         printBrokenLinksTo(outputStream);
     }
