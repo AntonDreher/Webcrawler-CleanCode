@@ -1,54 +1,51 @@
 package com.cleancode.webcrawler;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import com.cleancode.webcrawler.document.Document;
+import com.cleancode.webcrawler.document.Elements;
 
 import java.util.StringTokenizer;
 
+import static com.cleancode.webcrawler.util.HTMLConstants.*;
+
 public class PageStats {
-    private Document document;
+    private final Document document;
     private int wordCount;
     private int linkCount;
     private int imageCount;
     private int videoCount;
 
-    final static String LINK_TAG = "a";
-    final static String EXCLUDE_SAME_PAGE_LINKS = ":not([href^=#])";
-    final static String IMAGE_TAG = "img";
-    final static String VIDEO_TAG = "video";
-
-    public PageStats(Document document){
+    public PageStats(Document document) {
         this.document = document;
-        setStats();
+        initializeStats();
     }
 
-    private void setStats(){
+    private void initializeStats() {
         countWords();
         countImages();
         countLinks();
         countVideos();
     }
 
-    private void countWords(){
-        String text = document.text();
+    private void countWords() {
+        String text = document.getText();
         StringTokenizer tokenizer = new StringTokenizer(text);
         wordCount = tokenizer.countTokens();
     }
 
-    private int countTagElements(String tag){
-        Elements elements = document.select(tag);
+    private int countTagElements(String tag) {
+        Elements elements = document.selectCss(tag);
         return elements.size();
     }
 
-    private void countLinks(){
+    private void countLinks() {
         this.linkCount = countTagElements(LINK_TAG + EXCLUDE_SAME_PAGE_LINKS);
     }
 
-    private void countImages(){
+    private void countImages() {
         this.imageCount = countTagElements(IMAGE_TAG);
     }
 
-    private void countVideos(){
+    private void countVideos() {
         this.videoCount = countTagElements(VIDEO_TAG);
     }
 

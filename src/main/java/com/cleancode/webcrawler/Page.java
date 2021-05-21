@@ -1,8 +1,8 @@
 package com.cleancode.webcrawler;
 
-import org.jsoup.helper.HttpConnection;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import com.cleancode.webcrawler.document.Document;
+import com.cleancode.webcrawler.document.DocumentFactory;
+import com.cleancode.webcrawler.document.Elements;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,22 +14,31 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.cleancode.webcrawler.util.HTMLConstants.*;
+
 public class Page {
-    private URL url;
+    private static DocumentFactory documentFactory;
+
+    private final URL url;
     private Document document;
     private PageStats stats;
 
-    public static final String LINK_REFERENCE_ATTRIBUTE = "href";
-
-    public Page(URL url) throws IOException {
+    public Page(URL url) {
         this.url = url;
-        setDocument();
+    }
+
+    public static void setDocumentFactory(DocumentFactory documentFactory) {
+        Page.documentFactory = documentFactory;
+    }
+
+    public void computePageStatistics() throws IOException {
+        this.document = Page.documentFactory.getDocumentFrom(url);
         this.stats = new PageStats(document);
     }
 
-    URL getAbsoluteUrl(String uri){
+    URL getAbsoluteUrl(String uri) {
         try {
-            if (new URI(uri).isAbsolute()){
+            if (new URI(uri).isAbsolute()) {
                 return new URL(uri);
             } else {
                 return new URL(url, uri);
@@ -39,17 +48,13 @@ public class Page {
         }
     }
 
-    Set<URL> getLinkedUrls(){
-        Elements links = document.select(PageStats.LINK_TAG + PageStats.EXCLUDE_SAME_PAGE_LINKS);
+    Set<URL> getLinkedUrls() {
+        Elements links = document.selectCss(LINK_TAG + EXCLUDE_SAME_PAGE_LINKS);
         List<String> uris = links.eachAttr(LINK_REFERENCE_ATTRIBUTE);
         return uris.stream()
                 .map(this::getAbsoluteUrl)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
-    }
-
-    private void setDocument() throws IOException {
-        this.document = HttpConnection.connect(url).get();
     }
 
     @Override

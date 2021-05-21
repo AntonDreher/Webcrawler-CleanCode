@@ -1,5 +1,7 @@
 package com.cleancode.webcrawler;
 
+import com.cleancode.webcrawler.document.adapter.DocumentFactoryImpl;
+
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
@@ -10,19 +12,20 @@ public class Main {
         validateArgsLength(args);
         URL startUrl = getStartUrlFromArgs(args);
         PrintStream output = getPrintStreamFromArgs(args);
+        Page.setDocumentFactory(new DocumentFactoryImpl());
         WebCrawler webCrawler = new WebCrawler(startUrl);
         webCrawler.crawl();
         webCrawler.printStatsTo(output);
     }
 
-    static void validateArgsLength(String[] args){
-        if (args.length < 1 || args.length > 2){
+    static void validateArgsLength(String[] args) {
+        if (args.length < 1 || args.length > 2) {
             System.err.println("Usage: webcrawler URL [FILE]");
             System.exit(1);
         }
     }
 
-    static URL getStartUrlFromArgs(String[] args){
+    static URL getStartUrlFromArgs(String[] args) {
         URL startUrl = null;
         try {
             startUrl = new URL(args[0]);
@@ -33,9 +36,9 @@ public class Main {
         return startUrl;
     }
 
-    static PrintStream getPrintStreamFromArgs(String[] args){
+    static PrintStream getPrintStreamFromArgs(String[] args) {
         PrintStream output = System.out;
-        if (args.length >= 2){
+        if (args.length >= 2) {
             try {
                 output = new PrintStream(args[1]);
             } catch (FileNotFoundException e) {
