@@ -2,20 +2,23 @@ package com.cleancode.webcrawler;
 
 import com.cleancode.webcrawler.document.adapter.DocumentFactoryImpl;
 
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
         validateArgsLength(args);
-        URL startUrl = getStartUrlFromArgs(args);
+        ArrayList<URL> urlsToCrawl = getUrlsToCrawlFromArgs(args);
         PrintStream output = getPrintStreamFromArgs(args);
         Page.setDocumentFactory(new DocumentFactoryImpl());
-        WebCrawler webCrawler = new WebCrawler(startUrl);
-        webCrawler.crawl();
-        webCrawler.printStatsTo(output);
+
+        for(URL startUrl : urlsToCrawl) {
+            WebCrawler webCrawler = new WebCrawler(startUrl);
+            webCrawler.crawl();
+            webCrawler.printStatsTo(output);
+        }
     }
 
     static void validateArgsLength(String[] args) {
@@ -25,27 +28,30 @@ public class Main {
         }
     }
 
-    static URL getStartUrlFromArgs(String[] args) {
-        URL startUrl = null;
-        try {
-            startUrl = new URL(args[0]);
-        } catch (MalformedURLException e) {
-            System.err.println("Invalid url");
-            System.exit(1);
+    static ArrayList<URL> getUrlsToCrawlFromArgs(String[] args) {
+        ArrayList<URL> urlsToCrawl = new ArrayList<URL>();
+
+        for(int i=0; i<args.length; i++) {
+            try {
+                urlsToCrawl.add(new URL(args[i]));
+            } catch (MalformedURLException e) {
+                System.err.println("Invalid url at position " +i);
+                System.exit(1);
+            }
         }
-        return startUrl;
+        return urlsToCrawl;
     }
 
     static PrintStream getPrintStreamFromArgs(String[] args) {
         PrintStream output = System.out;
-        if (args.length >= 2) {
+      /*  if (args.length >= 2) {
             try {
                 output = new PrintStream(args[1]);
             } catch (FileNotFoundException e) {
                 System.err.println("Invalid file path");
                 System.exit(1);
             }
-        }
+        }* TODO*/
         return output;
     }
 }

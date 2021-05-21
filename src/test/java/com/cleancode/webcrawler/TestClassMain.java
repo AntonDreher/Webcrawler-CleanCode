@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,14 +50,14 @@ public class TestClassMain {
     }
 
     @Test
-    public void testGetStartUrlFromArgsInvalidURLCallsSystemExit() {
+    public void testGetUrlsToCrawlFromArgsInvalidURLCallsSystemExit() {
         testSystemExitIsCalledWith(
-                Main::getStartUrlFromArgs,
+                Main::getUrlsToCrawlFromArgs,
                 new String[]{invalidURL},
                 1
         );
     }
-
+/*
     @Test
     public void testGetPrintStreamFromArgsInvalidPathCallsSystemExit() {
         testSystemExitIsCalledWith(
@@ -64,12 +65,14 @@ public class TestClassMain {
                 new String[]{validURLGoogle, invalidPath},
                 1
         );
-    }
+    }TODO */
 
     @Test
-    public void testGetStartUrlFromArgsValidURL() throws MalformedURLException {
-        testNoSystemExitIsCalled(Main::getStartUrlFromArgs, new String[]{validURLGoogle});
-        Assertions.assertEquals(new URL(validURLGoogle), Main.getStartUrlFromArgs(new String[]{validURLGoogle}));
+    public void testgetUrlsToCrawlFromArgsValidURL() throws MalformedURLException {
+        ArrayList<URL> validURLList = new ArrayList<URL>();
+        validURLList.add(new URL(validURLGoogle));
+        testNoSystemExitIsCalled(Main::getUrlsToCrawlFromArgs, new String[]{validURLGoogle});
+        Assertions.assertEquals(validURLList, Main.getUrlsToCrawlFromArgs(new String[]{validURLGoogle}));
     }
 
     @Test
