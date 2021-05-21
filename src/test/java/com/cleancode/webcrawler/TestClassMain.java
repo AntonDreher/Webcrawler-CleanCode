@@ -13,7 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestClassMain {
-    public final static String validURL = "https://www.google.com/";
+    public final static String validURLGoogle = "https://www.google.com/";
+    public final static String validURLWikipedia = "https://www.wikipedia.com";
     public final static String invalidURL = "www...google.com";
     public final static String validPath = System.getProperty("os.name").startsWith("Windows") ? "NUL" : "/dev/null";
     public final static String invalidPath = "/x/y";
@@ -60,27 +61,27 @@ public class TestClassMain {
     public void testGetPrintStreamFromArgsInvalidPathCallsSystemExit() {
         testSystemExitIsCalledWith(
                 Main::getPrintStreamFromArgs,
-                new String[]{validURL, invalidPath},
+                new String[]{validURLGoogle, invalidPath},
                 1
         );
     }
 
     @Test
     public void testGetStartUrlFromArgsValidURL() throws MalformedURLException {
-        testNoSystemExitIsCalled(Main::getStartUrlFromArgs, new String[]{validURL});
-        Assertions.assertEquals(new URL(validURL), Main.getStartUrlFromArgs(new String[]{validURL}));
+        testNoSystemExitIsCalled(Main::getStartUrlFromArgs, new String[]{validURLGoogle});
+        Assertions.assertEquals(new URL(validURLGoogle), Main.getStartUrlFromArgs(new String[]{validURLGoogle}));
     }
 
     @Test
     public void testGetPrintStreamFromArgsNoPath() {
-        testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURL});
-        Assertions.assertEquals(System.out, Main.getPrintStreamFromArgs(new String[]{validURL}));
+        testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURLGoogle});
+        Assertions.assertEquals(System.out, Main.getPrintStreamFromArgs(new String[]{validURLGoogle}));
     }
 
     @Test
     public void testGetPrintStreamFromArgsValidPath() {
-        testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURL, validPath});
-        Assertions.assertNotNull(Main.getPrintStreamFromArgs(new String[]{validURL, validPath}));
+        testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURLGoogle, validPath});
+        Assertions.assertNotNull(Main.getPrintStreamFromArgs(new String[]{validURLGoogle, validPath}));
     }
 
     @Test
@@ -94,22 +95,22 @@ public class TestClassMain {
 
     @Test
     public void testValidateArgsLengthOneArguments() {
-        testNoSystemExitIsCalled(Main::validateArgsLength, new String[]{validURL});
-        assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURL}));
+        testNoSystemExitIsCalled(Main::validateArgsLength, new String[]{validURLGoogle});
+        assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURLGoogle}));
     }
 
     @Test
     public void testValidateArgsLengthTwoArguments() {
-        testNoSystemExitIsCalled(Main::validateArgsLength, new String[]{validURL, validPath});
-        assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURL, validPath}));
+        testNoSystemExitIsCalled(Main::validateArgsLength, new String[]{validURLGoogle, validPath});
+        assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURLGoogle, validPath}));
     }
 
     @Test
     public void testValidateArgsLengthThreeArguments() {
-        testSystemExitIsCalledWith(
+        testNoSystemExitIsCalled(
                 Main::validateArgsLength,
-                new String[]{validURL, validPath, "extra"},
-                1
+                new String[]{validURLGoogle, validURLWikipedia, validPath}
         );
+        assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURLGoogle, validPath}));
     }
 }

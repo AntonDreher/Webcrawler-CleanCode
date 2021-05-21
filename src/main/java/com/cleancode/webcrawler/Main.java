@@ -19,8 +19,8 @@ public class Main {
     }
 
     static void validateArgsLength(String[] args) {
-        if (args.length < 1 || args.length > 2) {
-            System.err.println("Usage: webcrawler URL [FILE]");
+        if (args.length < 1) {
+            System.err.println("Usage: webcrawler URL[]");
             System.exit(1);
         }
     }
