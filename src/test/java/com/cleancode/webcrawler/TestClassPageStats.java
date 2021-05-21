@@ -2,7 +2,6 @@ package com.cleancode.webcrawler;
 
 import com.cleancode.webcrawler.document.Document;
 import com.cleancode.webcrawler.document.FakeDocument;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +23,7 @@ public class TestClassPageStats {
     }
 
     @Test
-    public void testCountVideos(){
+    public void testCountVideos() {
         assertEquals(1, statsTest.getVideoCount());
     }
 
@@ -34,7 +33,7 @@ public class TestClassPageStats {
     }
 
     @Test
-    public void testCountWords(){
+    public void testCountWords() {
         assertEquals(11, statsTest.getWordCount());
     }
 

@@ -1,11 +1,10 @@
 package com.cleancode.webcrawler;
 
 import com.cleancode.webcrawler.document.FakeDocumentFactory;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 
@@ -27,25 +26,25 @@ public class TestClassPage {
     }
 
     @Test
-    public void testGetAbsoluteUrl(){
+    public void testGetAbsoluteUrl() {
         String absoluteUrl = "https://www.wikipedia.com";
         assertEquals(absoluteUrl, testPage.getAbsoluteUrl(absoluteUrl).toString());
     }
 
     @Test
-    public void testGetAbsoluteUrlWithRelativeUrl(){
+    public void testGetAbsoluteUrlWithRelativeUrl() {
         String relativeUrl = "relative/URL/";
-        assertEquals(STANDARD_URL_TO_TEST + relativeUrl,  testPage.getAbsoluteUrl(relativeUrl).toString());
+        assertEquals(STANDARD_URL_TO_TEST + relativeUrl, testPage.getAbsoluteUrl(relativeUrl).toString());
     }
 
     @Test
-    public void testGetAbsoluteUrlInvalid(){
+    public void testGetAbsoluteUrlInvalid() {
         String invalidURL = "htt://www...123...";
         assertNull(testPage.getAbsoluteUrl(invalidURL));
     }
 
     @Test
-    public void testGetUrls(){
+    public void testGetUrls() {
         Set<URL> linkedUrls = testPage.getLinkedUrls();
         assertTrue(linkedUrls.size() > 0);
     }
@@ -56,7 +55,7 @@ public class TestClassPage {
     }
 
     @Test
-    public void testToString(){
+    public void testToString() {
         assertTrue(testPage.toString().startsWith(standardTestUrl.toString()));
     }
 }

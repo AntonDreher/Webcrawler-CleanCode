@@ -18,7 +18,7 @@ public class TestClassMain {
     public final static String validPath = System.getProperty("os.name").startsWith("Windows") ? "NUL" : "/dev/null";
     public final static String invalidPath = "/x/y";
 
-    private<T> void testSystemExitIsCalledWith(Consumer<T> function, T argument, int expectedStatus){
+    private <T> void testSystemExitIsCalledWith(Consumer<T> function, T argument, int expectedStatus) {
         SecurityManager initialSecurityManger = System.getSecurityManager();
         try {
             System.setErr(new PrintStream(OutputStream.nullOutputStream()));
@@ -33,7 +33,7 @@ public class TestClassMain {
         }
     }
 
-    private<T> void testNoSystemExitIsCalled(Consumer<T> function, T argument){
+    private <T> void testNoSystemExitIsCalled(Consumer<T> function, T argument) {
         SecurityManager initialSecurityManger = System.getSecurityManager();
         try {
             System.setErr(new PrintStream(OutputStream.nullOutputStream()));
@@ -48,7 +48,7 @@ public class TestClassMain {
     }
 
     @Test
-    public void testGetStartUrlFromArgsInvalidURLCallsSystemExit(){
+    public void testGetStartUrlFromArgsInvalidURLCallsSystemExit() {
         testSystemExitIsCalledWith(
                 Main::getStartUrlFromArgs,
                 new String[]{invalidURL},
@@ -57,7 +57,7 @@ public class TestClassMain {
     }
 
     @Test
-    public void testGetPrintStreamFromArgsInvalidPathCallsSystemExit(){
+    public void testGetPrintStreamFromArgsInvalidPathCallsSystemExit() {
         testSystemExitIsCalledWith(
                 Main::getPrintStreamFromArgs,
                 new String[]{validURL, invalidPath},
@@ -72,7 +72,7 @@ public class TestClassMain {
     }
 
     @Test
-    public void testGetPrintStreamFromArgsNoPath(){
+    public void testGetPrintStreamFromArgsNoPath() {
         testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURL});
         Assertions.assertEquals(System.out, Main.getPrintStreamFromArgs(new String[]{validURL}));
     }

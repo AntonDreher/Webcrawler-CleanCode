@@ -1,8 +1,8 @@
 package com.cleancode.webcrawler;
 
-import com.cleancode.webcrawler.document.*;
-
-import org.jsoup.HttpStatusException;
+import com.cleancode.webcrawler.document.Fake400DocumentFactory;
+import com.cleancode.webcrawler.document.Fake404DocumentFactory;
+import com.cleancode.webcrawler.document.FakeDocumentFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,9 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,24 +43,24 @@ public class TestClassWebCrawler {
     }
 
     @Test
-    public void testHasExceedMaxDepthFalse(){
+    public void testHasExceedMaxDepthFalse() {
         assertFalse(crawlerDepthZero.hasExceededMaxDepth(0));
     }
 
     @Test
-    public void testHasExceedMaxDepthTrue(){
+    public void testHasExceedMaxDepthTrue() {
         assertTrue(crawlerDepthTwo.hasExceededMaxDepth(3));
     }
 
     @Test
-    public void testVisitedURLTrue(){
+    public void testVisitedURLTrue() {
         crawlerDepthTwo.crawlRecursive(standardTestUrl, 0);
         crawlerDepthTwo.crawlRecursive(standardTestUrl, 1);
         assertTrue(crawlerDepthTwo.isVisitedUrl(standardTestUrl));
     }
 
     @Test
-    public void testVisitedURLFalse(){
+    public void testVisitedURLFalse() {
         crawlerDepthZero.crawlRecursive(standardTestUrl, 1);
         assertFalse(crawlerDepthZero.isVisitedUrl(standardTestUrl));
     }
@@ -101,8 +98,8 @@ public class TestClassWebCrawler {
         crawlerDepthZero.printStatsTo(printStream);
         assertEquals(
                 "Crawler Stats\n\n" +
-                "https://www.google.com: 11 word(s), 3 link(s), 2 image(s), 1 video(s)\n\n" +
-                "Broken Links\n\n",
+                        "https://www.google.com: 11 word(s), 3 link(s), 2 image(s), 1 video(s)\n\n" +
+                        "Broken Links\n\n",
                 outputStream.toString()
         );
     }

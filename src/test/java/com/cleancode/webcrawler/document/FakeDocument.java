@@ -2,7 +2,7 @@ package com.cleancode.webcrawler.document;
 
 import static com.cleancode.webcrawler.util.HTMLConstants.*;
 
-public class FakeDocument implements Document{
+public class FakeDocument implements Document {
     @Override
     public Elements selectCss(String cssSelector) {
         switch (cssSelector) {
