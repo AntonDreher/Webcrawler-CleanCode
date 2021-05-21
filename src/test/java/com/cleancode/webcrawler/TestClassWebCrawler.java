@@ -1,57 +1,48 @@
 package com.cleancode.webcrawler;
 
+import com.cleancode.webcrawler.document.*;
+
 import org.jsoup.HttpStatusException;
-import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestClassWebCrawler {
     public static final String STANDARD_URL_TO_TEST = "https://www.google.com";
-    private static URL standardTestUrl;
+
+    private URL standardTestUrl;
 
     private WebCrawler crawlerDepthZero;
     private WebCrawler crawlerDepthOne;
     private WebCrawler crawlerDepthTwo;
 
-    private MockConnection connection;
-    private Document document;
-
     @BeforeEach
     public void init() throws IOException {
         standardTestUrl = new URL(STANDARD_URL_TO_TEST);
-        connection = new MockConnection(STANDARD_URL_TO_TEST);
-        document = Document.createShell(STANDARD_URL_TO_TEST);
-        connection.setDocument(Document.createShell(STANDARD_URL_TO_TEST));
+        Page.setDocumentFactory(new FakeDocumentFactory(standardTestUrl));
+
         crawlerDepthZero = new WebCrawler(standardTestUrl, 0);
         crawlerDepthOne = new WebCrawler(standardTestUrl, 1);
         crawlerDepthTwo = new WebCrawler(standardTestUrl);
     }
 
-    private void addLinkedPageToDocument(String url) throws IOException {
-        URL linkedUrl = new URL(url);
-        document.body().append("<a href='" + linkedUrl.toString() + "'></a>");
-        MockConnection.addMockConnectionToEmptyDocument("https://www.youtube.com/");
-        connection.setDocument(document);
-    }
-
     @Test
     public void testCrawlLinkedPages() throws IOException {
-        String linkedUrl = "https://www.youtube.com/";
-        addLinkedPageToDocument(linkedUrl);
         crawlerDepthOne = new WebCrawler(standardTestUrl, 1);
 
         crawlerDepthOne.crawl();
 
-        assertTrue(crawlerDepthOne.getVisitedUrls().contains(new URL(linkedUrl)));
+        assertTrue(crawlerDepthOne.getVisitedUrls().contains(new URL("https://www.test.at")));
     }
 
     @Test
@@ -80,8 +71,7 @@ public class TestClassWebCrawler {
     @Test
     public void testInvalidURLStatus404() throws IOException {
         URL invalidURL = new URL("https://www.google.com/not/valid");
-        MockConnection connection = new MockConnection(invalidURL.toString());
-        connection.setThrows(new HttpStatusException("Error 404", 404, invalidURL.toString()));
+        Page.setDocumentFactory(new Fake404DocumentFactory());
         crawlerDepthZero = new WebCrawler(invalidURL, 0);
 
         crawlerDepthZero.crawl();
@@ -92,8 +82,7 @@ public class TestClassWebCrawler {
     @Test
     public void testInvalidURLStatus400() throws IOException {
         URL invalidURL = new URL("https://www.google.com/asdf");
-        MockConnection connection = new MockConnection(invalidURL.toString());
-        connection.setThrows(new HttpStatusException("Error 400", 400, invalidURL.toString()));
+        Page.setDocumentFactory(new Fake400DocumentFactory());
         crawlerDepthZero = new WebCrawler(invalidURL, 0);
 
         crawlerDepthZero.crawl();
@@ -103,10 +92,9 @@ public class TestClassWebCrawler {
     }
 
     @Test
-    public void testPrintStatsTo() throws IOException {
+    public void testPrintStatsTo() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
-        connection.setDocument(TestClassPage.getDocumentFromHTMLFile("src/test/resources/testHTML.html"));
 
         crawlerDepthZero.crawl();
 
@@ -120,10 +108,10 @@ public class TestClassWebCrawler {
     }
 
     @Test
-    public void testPrintStatsToWithBrokenLink() throws IOException {
+    public void testPrintStatsToWithBrokenLink() {
+        Page.setDocumentFactory(new Fake404DocumentFactory());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
-        connection.setThrows(new HttpStatusException("Error 404", 404, standardTestUrl.toString()));
 
         crawlerDepthZero.crawl();
 

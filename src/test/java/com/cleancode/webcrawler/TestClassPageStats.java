@@ -1,21 +1,20 @@
 package com.cleancode.webcrawler;
 
-import org.jsoup.nodes.Document;
+import com.cleancode.webcrawler.document.Document;
+import com.cleancode.webcrawler.document.FakeDocument;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class TestClassPageStats {
     private PageStats statsTest;
 
     @BeforeEach
-    public void setup() throws IOException {
-        Document document = TestClassPage.getDocumentFromHTMLFile("src/test/resources/testHTML.html");
+    public void setup() {
+        Document document = new FakeDocument();
         statsTest = new PageStats(document);
     }
 
