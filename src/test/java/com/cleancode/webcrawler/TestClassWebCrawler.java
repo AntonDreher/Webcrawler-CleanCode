@@ -10,6 +10,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,9 +38,7 @@ public class TestClassWebCrawler {
     @Test
     public void testCrawlLinkedPages() throws IOException {
         crawlerDepthOne = new WebCrawler(standardTestUrl, 1);
-
         crawlerDepthOne.crawl();
-
         assertTrue(crawlerDepthOne.getVisitedUrls().contains(new URL("https://www.test.at")));
     }
 
@@ -97,7 +97,7 @@ public class TestClassWebCrawler {
 
         crawlerDepthZero.printStatsTo(printStream);
         String expectedOutput = String.format(
-                "Crawler Stats%n%n" +
+                "Stats for " + STANDARD_URL_TO_TEST + "%n%n" +
                         "%s: 11 word(s), 3 link(s), 2 image(s), 1 video(s)%n%n" +
                         "Broken Links%n%n", standardTestUrl
         );
@@ -114,10 +114,15 @@ public class TestClassWebCrawler {
 
         crawlerDepthZero.printStatsTo(printStream);
         String expectedOutput = String.format(
-                "Crawler Stats%n%n%n" +
+                "Stats for " + STANDARD_URL_TO_TEST + "%n%n%n" +
                         "Broken Links%n%n" +
                         "%s%n", standardTestUrl
         );
         assertEquals(expectedOutput, outputStream.toString());
+    }
+
+    @Test
+    public void testCrawlerWithConcurrency(){
+        ExecutorService service = Executors.newFixedThreadPool(10);
     }
 }

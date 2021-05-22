@@ -28,7 +28,13 @@ public class Main {
 
         for(int i=0; i<args.length; i++) {
             try {
-                urlsToCrawl.add(new URL(args[i]));
+                URL currentURL = new URL(args[i]);
+                if(!urlsToCrawl.contains(currentURL)) {
+                    urlsToCrawl.add(currentURL);
+                }else{
+                    System.err.println(args[i] + " multiple times given");
+                    System.exit(1);
+                }
             } catch (MalformedURLException e) {
                 System.err.println("Invalid url at position " +i);
                 System.exit(1);
@@ -53,4 +59,6 @@ public class Main {
         }* TODO*/
         return output;
     }
+
+
 }

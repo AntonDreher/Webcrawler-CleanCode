@@ -57,6 +57,24 @@ public class TestClassMain {
                 1
         );
     }
+
+    @Test
+    public void testGetUrlsToCrawlFromArgsDuplicatedURLCallsSystemExit(){
+        testSystemExitIsCalledWith(
+                Main::getUrlsToCrawlFromArgs,
+                new String[]{validURLGoogle, validURLGoogle},
+                1
+        );
+    }
+
+    @Test
+    public void testGetUrlsToCrawlFromArgsDuplicatedAndUniqueURLCallsSystemExit(){
+        testSystemExitIsCalledWith(
+                Main::getUrlsToCrawlFromArgs,
+                new String[]{validURLGoogle, validURLWikipedia, validURLGoogle},
+                1
+        );
+    }
 /*
     @Test
     public void testGetPrintStreamFromArgsInvalidPathCallsSystemExit() {
