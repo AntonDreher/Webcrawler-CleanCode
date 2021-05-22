@@ -17,7 +17,7 @@ public class Main {
         ArrayList<URL> urlsToCrawl = getUrlsToCrawlFromArgs(args);
         PrintStream output = getPrintStreamFromArgs(args);
         Page.setDocumentFactory(new DocumentFactoryImpl());
-        startCrawling(urlsToCrawl);
+        startCrawling(urlsToCrawl, output);
     }
 
     static void validateArgsLength(String[] args) {
@@ -47,8 +47,8 @@ public class Main {
         return urlsToCrawl;
     }
 
-    static void startCrawling(ArrayList<URL> urlsToCrawl){
-        WebCrawlerSchedule scheduler = new WebCrawlerSchedule(urlsToCrawl);
+    static void startCrawling(ArrayList<URL> urlsToCrawl, PrintStream output){
+        WebCrawlerSchedule scheduler = new WebCrawlerSchedule(urlsToCrawl, output);
         scheduler.run();
     }
     static PrintStream getPrintStreamFromArgs(String[] args) {
