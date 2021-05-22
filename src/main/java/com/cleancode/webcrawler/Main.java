@@ -2,9 +2,13 @@ package com.cleancode.webcrawler;
 
 import com.cleancode.webcrawler.document.adapter.DocumentFactoryImpl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Main {
@@ -18,7 +22,7 @@ public class Main {
 
     static void validateArgsLength(String[] args) {
         if (args.length < 1) {
-            System.err.println("Usage: webcrawler URL[]");
+            System.err.println("Usage: webcrawler URL[] [FILE]");
             System.exit(1);
         }
     }
@@ -49,16 +53,24 @@ public class Main {
     }
     static PrintStream getPrintStreamFromArgs(String[] args) {
         PrintStream output = System.out;
-      /*  if (args.length >= 2) {
+        if(isLastParameterFilePath(args)){
             try {
-                output = new PrintStream(args[1]);
+                output = new PrintStream(args[args.length-1]);
             } catch (FileNotFoundException e) {
                 System.err.println("Invalid file path");
                 System.exit(1);
             }
-        }* TODO*/
+        }
         return output;
     }
 
+    static boolean isLastParameterFilePath(String[] args){
+        try{
+            Paths.get(args[args.length-1]);
+        }catch(InvalidPathException | NullPointerException ex){
+            return false;
+        }
+        return true;
+    }
 
 }

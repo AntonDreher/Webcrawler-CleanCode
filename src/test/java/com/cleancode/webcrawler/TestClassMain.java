@@ -18,7 +18,7 @@ public class TestClassMain {
     public final static String validURLWikipedia = "https://www.wikipedia.com";
     public final static String invalidURL = "www...google.com";
     public final static String validPath = System.getProperty("os.name").startsWith("Windows") ? "NUL" : "/dev/null";
-    public final static String invalidPath = "/x/y";
+    public final static String invalidPath = "/x/y/te?t";
 
     private <T> void testSystemExitIsCalledWith(Consumer<T> function, T argument, int expectedStatus) {
         SecurityManager initialSecurityManger = System.getSecurityManager();
@@ -75,15 +75,14 @@ public class TestClassMain {
                 1
         );
     }
-/*
+
     @Test
     public void testGetPrintStreamFromArgsInvalidPathCallsSystemExit() {
-        testSystemExitIsCalledWith(
+        testNoSystemExitIsCalled(
                 Main::getPrintStreamFromArgs,
-                new String[]{validURLGoogle, invalidPath},
-                1
+                new String[]{validURLGoogle, invalidPath}
         );
-    }TODO */
+    }
 
     @Test
     public void testgetUrlsToCrawlFromArgsValidURL() throws MalformedURLException {
@@ -94,9 +93,15 @@ public class TestClassMain {
     }
 
     @Test
-    public void testGetPrintStreamFromArgsNoPath() {
+    public void testGetPrintStreamFromArgsNoPathSingleURLS() {
         testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURLGoogle});
         Assertions.assertEquals(System.out, Main.getPrintStreamFromArgs(new String[]{validURLGoogle}));
+    }
+
+    @Test
+    public void testGetPrintStreamFromArgsNoPathMultipleURLS() {
+        testNoSystemExitIsCalled(Main::getPrintStreamFromArgs, new String[]{validURLGoogle, validURLWikipedia});
+        Assertions.assertEquals(System.out, Main.getPrintStreamFromArgs(new String[]{validURLGoogle, validURLWikipedia}));
     }
 
     @Test
@@ -133,5 +138,40 @@ public class TestClassMain {
                 new String[]{validURLGoogle, validURLWikipedia, validPath}
         );
         assertDoesNotThrow(() -> Main.validateArgsLength(new String[]{validURLGoogle, validPath}));
+    }
+
+    @Test
+    public void testIsLastParameterFilePathTwoArgumentsValidPathTrue(){
+        String[] argsToTest = {validURLGoogle, validPath};
+        testNoSystemExitIsCalled(Main::isLastParameterFilePath, argsToTest);
+        assertTrue(Main.isLastParameterFilePath(argsToTest));
+    }
+
+    @Test
+    public void testIsLastParameterFilePathThreeArgumentsValidPathTrue(){
+        String[] argsToTest = {validURLGoogle, validURLWikipedia, validPath};
+        testNoSystemExitIsCalled(Main::isLastParameterFilePath, argsToTest);
+        assertTrue(Main.isLastParameterFilePath(argsToTest));
+    }
+
+    @Test
+    public void testIsLastParameterFilePathTwoArgumentsFalse(){
+        String[] argsToTest = {validURLGoogle, validURLWikipedia};
+        testNoSystemExitIsCalled(Main::isLastParameterFilePath, argsToTest);
+        assertFalse(Main.isLastParameterFilePath(argsToTest));
+    }
+
+    @Test
+    public void testIsLastParameterFilePathThreeArgumentsValidPathFalse(){
+        String[] argsToTest = {validURLGoogle, validPath, validURLWikipedia};
+        testNoSystemExitIsCalled(Main::isLastParameterFilePath, argsToTest);
+        assertFalse(Main.isLastParameterFilePath(argsToTest));
+    }
+
+    @Test
+    public void testIsLastParameterFilePathTwoArgumentsInvalidPathFalse(){
+        String[] argsToTest = {validURLGoogle, invalidPath};
+        testNoSystemExitIsCalled(Main::isLastParameterFilePath, argsToTest);
+        assertFalse(Main.isLastParameterFilePath(argsToTest));
     }
 }
