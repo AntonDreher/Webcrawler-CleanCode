@@ -8,7 +8,6 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 

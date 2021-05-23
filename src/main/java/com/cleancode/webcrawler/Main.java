@@ -2,14 +2,8 @@ package com.cleancode.webcrawler;
 
 import com.cleancode.webcrawler.document.adapter.DocumentFactoryImpl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
