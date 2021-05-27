@@ -1,7 +1,8 @@
-package com.cleancode.webcrawler;
+package com.cleancode.webcrawler.stats;
 
 import com.cleancode.webcrawler.document.Document;
 import com.cleancode.webcrawler.document.FakeDocument;
+import com.cleancode.webcrawler.stats.PageStats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

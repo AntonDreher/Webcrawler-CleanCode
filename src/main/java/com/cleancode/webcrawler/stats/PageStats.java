@@ -1,4 +1,4 @@
-package com.cleancode.webcrawler;
+package com.cleancode.webcrawler.stats;
 
 import com.cleancode.webcrawler.document.Document;
 import com.cleancode.webcrawler.document.Elements;
