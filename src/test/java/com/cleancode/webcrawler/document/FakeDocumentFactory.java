@@ -1,6 +1,5 @@
 package com.cleancode.webcrawler.document;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 
@@ -12,7 +11,7 @@ public class FakeDocumentFactory implements DocumentFactory {
     }
 
     @Override
-    public Document getDocumentFrom(URL url) throws IOException {
+    public Document getDocumentFrom(URL url) {
         if (nonEmptyPageUrls.contains(url)) {
             return new FakeDocument();
         }

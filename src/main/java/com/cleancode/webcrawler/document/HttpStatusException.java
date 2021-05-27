@@ -1,8 +1,6 @@
 package com.cleancode.webcrawler.document;
 
-import java.io.IOException;
-
-public class HttpStatusException extends IOException {
+public class HttpStatusException extends RuntimeException {
     private final int statusCode;
     private final String url;
 
@@ -22,6 +20,6 @@ public class HttpStatusException extends IOException {
 
     @Override
     public String toString() {
-        return super.toString() + ". Status=" + statusCode + ", URL=" + url;
+        return "HTTP " + statusCode + " " + getMessage();
     }
 }
