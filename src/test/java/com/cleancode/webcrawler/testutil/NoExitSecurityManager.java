@@ -1,4 +1,4 @@
-package com.cleancode.webcrawler;
+package com.cleancode.webcrawler.testutil;
 
 import java.security.Permission;
 

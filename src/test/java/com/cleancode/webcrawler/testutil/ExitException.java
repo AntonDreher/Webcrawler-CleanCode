@@ -1,4 +1,4 @@
-package com.cleancode.webcrawler;
+package com.cleancode.webcrawler.testutil;
 
 public class ExitException extends SecurityException {
     public final int status;
