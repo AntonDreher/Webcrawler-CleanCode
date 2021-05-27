@@ -16,7 +16,7 @@ import static com.cleancode.webcrawler.util.HTMLConstants.*;
 public class ValidPage implements Page {
     private final URL url;
 
-    private Document document;
+    private final Document document;
     private PageStats stats;
 
     public ValidPage(URL url, Document document) {

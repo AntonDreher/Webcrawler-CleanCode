@@ -23,7 +23,7 @@ public class Main {
         printer.printAllStats(crawlerStats);
     }
 
-    private static CrawlerStats crawlUrls(List<URL> urlsToCrawl){
+    private static CrawlerStats crawlUrls(List<URL> urlsToCrawl) {
         WebCrawlerScheduler scheduler = new WebCrawlerScheduler(urlsToCrawl);
         scheduler.startWebcrawlers();
         scheduler.waitForWebcrawlersToFinish();

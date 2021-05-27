@@ -5,7 +5,10 @@ import com.cleancode.webcrawler.stats.CrawlerStats;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class WebCrawlerScheduler {
     private final List<URL> urlsToCrawl;
@@ -19,15 +22,15 @@ public class WebCrawlerScheduler {
 
     public void startWebcrawlers() {
         ExecutorService pool = Executors.newFixedThreadPool(10);
-        for(URL currentUrl : urlsToCrawl){
+        for (URL currentUrl : urlsToCrawl) {
             Future<CrawlerStats> crawlerStatsFuture = pool.submit(new WebCrawler(currentUrl));
             crawlerStatsFutures.add(crawlerStatsFuture);
         }
         pool.shutdown();
     }
 
-    public void waitForWebcrawlersToFinish(){
-        for(Future<CrawlerStats> crawlerStatsFuture : crawlerStatsFutures){
+    public void waitForWebcrawlersToFinish() {
+        for (Future<CrawlerStats> crawlerStatsFuture : crawlerStatsFutures) {
             try {
                 combinedCrawlerStats.mergeWith(crawlerStatsFuture.get());
             } catch (ExecutionException | InterruptedException e) {
@@ -37,7 +40,7 @@ public class WebCrawlerScheduler {
         }
     }
 
-    public CrawlerStats getCombinedCrawlerStats(){
+    public CrawlerStats getCombinedCrawlerStats() {
         return combinedCrawlerStats;
     }
 }

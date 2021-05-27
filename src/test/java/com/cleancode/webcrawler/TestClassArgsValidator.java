@@ -61,7 +61,7 @@ public class TestClassArgsValidator {
     }
 
     @Test
-    public void testGetUrlsToCrawlFromArgsDuplicatedURLCallsSystemExit(){
+    public void testGetUrlsToCrawlFromArgsDuplicatedURLCallsSystemExit() {
         ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLGoogle});
         testSystemExitIsCalledWith(
                 argsValidator::getUrlsToCrawlFromArgs,
@@ -70,7 +70,7 @@ public class TestClassArgsValidator {
     }
 
     @Test
-    public void testGetUrlsToCrawlFromArgsDuplicatedAndUniqueURLCallsSystemExit(){
+    public void testGetUrlsToCrawlFromArgsDuplicatedAndUniqueURLCallsSystemExit() {
         ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLWikipedia, validURLGoogle});
         testSystemExitIsCalledWith(
                 argsValidator::getUrlsToCrawlFromArgs,
@@ -90,7 +90,7 @@ public class TestClassArgsValidator {
     public void testGetUrlsToCrawlFromArgsValidURL() throws MalformedURLException {
         ArrayList<URL> validURLList = new ArrayList<>();
         validURLList.add(new URL(validURLGoogle));
-        ArgsValidator argsValidator = new ArgsValidator( new String[]{validURLGoogle});
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle});
         testNoSystemExitIsCalled(argsValidator::getUrlsToCrawlFromArgs);
         Assertions.assertEquals(validURLList, argsValidator.getUrlsToCrawlFromArgs());
     }
@@ -149,35 +149,35 @@ public class TestClassArgsValidator {
     }
 
     @Test
-    public void testIsLastParameterFilePathTwoArgumentsValidPathTrue(){
+    public void testIsLastParameterFilePathTwoArgumentsValidPathTrue() {
         ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validPath});
         testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
         assertTrue(argsValidator.isLastParameterFilePath());
     }
 
     @Test
-    public void testIsLastParameterFilePathThreeArgumentsValidPathTrue(){
+    public void testIsLastParameterFilePathThreeArgumentsValidPathTrue() {
         ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLWikipedia, validPath});
         testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
         assertTrue(argsValidator.isLastParameterFilePath());
     }
 
     @Test
-    public void testIsLastParameterFilePathTwoArgumentsFalse(){
+    public void testIsLastParameterFilePathTwoArgumentsFalse() {
         ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLWikipedia});
         testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
         assertFalse(argsValidator.isLastParameterFilePath());
     }
 
     @Test
-    public void testIsLastParameterFilePathThreeArgumentsValidPathFalse(){
+    public void testIsLastParameterFilePathThreeArgumentsValidPathFalse() {
         ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validPath, validURLWikipedia});
         testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
         assertFalse(argsValidator.isLastParameterFilePath());
     }
 
     @Test
-    public void testIsLastParameterFilePathTwoArgumentsInvalidPathFalse(){
+    public void testIsLastParameterFilePathTwoArgumentsInvalidPathFalse() {
         ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, invalidPath});
         testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
         assertFalse(argsValidator.isLastParameterFilePath());

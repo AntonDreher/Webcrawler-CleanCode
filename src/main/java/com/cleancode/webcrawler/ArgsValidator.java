@@ -38,7 +38,7 @@ public class ArgsValidator {
         return urlsToCrawl;
     }
 
-    private URL getValidUrlFromArgument(String argument){
+    private URL getValidUrlFromArgument(String argument) {
         try {
             return new URL(argument);
         } catch (MalformedURLException e) {

@@ -7,11 +7,11 @@ import java.io.PrintStream;
 public class ReportPrinter {
     private final PrintStream printStream;
 
-    public ReportPrinter(PrintStream printStream){
+    public ReportPrinter(PrintStream printStream) {
         this.printStream = printStream;
     }
 
-    public void printAllStats(CrawlerStats crawlerStats){
+    public void printAllStats(CrawlerStats crawlerStats) {
         printValidPageStats(crawlerStats);
         printBrokenLinks(crawlerStats);
         printErrors(crawlerStats);

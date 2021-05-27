@@ -13,13 +13,11 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 public class WebCrawler implements Callable<CrawlerStats> {
+    private static PageFactory pageFactory;
     private final URL startUrl;
     private final int maxDepth;
-
     private final Set<URL> visitedUrls = new HashSet<>();
     private final CrawlerStats crawlerStats = new CrawlerStats();
-
-    private static PageFactory pageFactory;
 
     public WebCrawler(URL startUrl) {
         this.startUrl = startUrl;
@@ -29,6 +27,10 @@ public class WebCrawler implements Callable<CrawlerStats> {
     public WebCrawler(URL startUrl, int maxDepth) {
         this.startUrl = startUrl;
         this.maxDepth = maxDepth;
+    }
+
+    public static void setPageFactory(PageFactory pageFactory) {
+        WebCrawler.pageFactory = pageFactory;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class WebCrawler implements Callable<CrawlerStats> {
         );
     }
 
-    Page getPage(URL url){
+    Page getPage(URL url) {
         try {
             Page page = pageFactory.getPageWithStatistics(url);
             crawlerStats.addPage(page);
@@ -69,10 +71,6 @@ public class WebCrawler implements Callable<CrawlerStats> {
 
         Page page = getPage(url);
         crawlLinkedPages(page, depth);
-    }
-
-    public static void setPageFactory(PageFactory pageFactory) {
-        WebCrawler.pageFactory = pageFactory;
     }
 
     public List<URL> getNotFoundUrls() {

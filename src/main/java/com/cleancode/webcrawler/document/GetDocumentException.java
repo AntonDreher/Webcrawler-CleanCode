@@ -3,9 +3,9 @@ package com.cleancode.webcrawler.document;
 import java.net.URL;
 
 public class GetDocumentException extends RuntimeException {
-    private URL url;
+    private final URL url;
 
-    public GetDocumentException(String message, Throwable cause, URL url){
+    public GetDocumentException(String message, Throwable cause, URL url) {
         super(message, cause);
         this.url = url;
     }

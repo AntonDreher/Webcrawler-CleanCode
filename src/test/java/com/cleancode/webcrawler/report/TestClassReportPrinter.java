@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static com.cleancode.webcrawler.testutil.TestingConstants.*;
+import static com.cleancode.webcrawler.testutil.TestingConstants.validTestUrl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestClassReportPrinter {

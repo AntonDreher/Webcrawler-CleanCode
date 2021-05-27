@@ -7,8 +7,9 @@ import org.junit.jupiter.api.Test;
 import java.net.URL;
 import java.util.Set;
 
-import static com.cleancode.webcrawler.testutil.TestingConstants.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.cleancode.webcrawler.testutil.TestingConstants.validTestUrl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class TestClassPage {

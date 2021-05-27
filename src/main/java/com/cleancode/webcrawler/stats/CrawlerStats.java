@@ -12,19 +12,19 @@ public class CrawlerStats {
     private final List<GetDocumentException> crawlingErrors = new ArrayList<>();
     private final List<Page> pages = new ArrayList<>();
 
-    public void addPage(Page page){
+    public void addPage(Page page) {
         pages.add(page);
     }
 
-    public void addNotFoundUrl(URL url){
+    public void addNotFoundUrl(URL url) {
         notFoundUrls.add(url);
     }
 
-    public void addCrawlingError(GetDocumentException exception){
+    public void addCrawlingError(GetDocumentException exception) {
         crawlingErrors.add(exception);
     }
 
-    public void mergeWith(CrawlerStats stats){
+    public void mergeWith(CrawlerStats stats) {
         this.pages.addAll(stats.pages);
         this.crawlingErrors.addAll(stats.crawlingErrors);
         this.notFoundUrls.addAll(stats.notFoundUrls);

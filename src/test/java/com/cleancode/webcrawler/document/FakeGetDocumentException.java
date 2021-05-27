@@ -1,6 +1,7 @@
 package com.cleancode.webcrawler.document;
 
-import static com.cleancode.webcrawler.testutil.TestingConstants.*;
+import static com.cleancode.webcrawler.testutil.TestingConstants.INVALID_URL_TO_TEST;
+import static com.cleancode.webcrawler.testutil.TestingConstants.invalidTestUrl;
 
 public class FakeGetDocumentException extends GetDocumentException {
     public FakeGetDocumentException() {

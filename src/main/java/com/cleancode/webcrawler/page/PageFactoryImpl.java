@@ -1,6 +1,6 @@
 package com.cleancode.webcrawler.page;
 
-import com.cleancode.webcrawler.document.*;
+import com.cleancode.webcrawler.document.DocumentFactory;
 
 import java.net.URL;
 
@@ -17,7 +17,7 @@ public class PageFactoryImpl implements PageFactory {
         return page;
     }
 
-    public Page getInvalidPage(){
+    public Page getInvalidPage() {
         return new InvalidPage();
     }
 }

@@ -16,11 +16,11 @@ public class DocumentFactoryImpl implements DocumentFactory {
         try {
             return new DocumentAdapter(HttpConnection.connect(url).get());
         } catch (HttpStatusException e) {
-            if (e.getStatusCode() == 404){
+            if (e.getStatusCode() == 404) {
                 throw new Http404StatusException(e.getMessage(), e.getUrl());
             }
             throw new GetDocumentException(e.getMessage(), e, url);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new GetDocumentException(e.getMessage(), e, url);
         }
     }

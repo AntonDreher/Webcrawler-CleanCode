@@ -5,5 +5,6 @@ import java.util.Set;
 
 public interface Page {
     void computePageStatistics();
+
     Set<URL> getLinkedUrls();
 }

@@ -5,10 +5,11 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 
-public class InvalidPage implements Page{
+public class InvalidPage implements Page {
 
     @Override
-    public void computePageStatistics() {}
+    public void computePageStatistics() {
+    }
 
     @Override
     public Set<URL> getLinkedUrls() {

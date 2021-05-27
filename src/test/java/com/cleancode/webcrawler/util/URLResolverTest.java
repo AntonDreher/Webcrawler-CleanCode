@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
-import static com.cleancode.webcrawler.testutil.TestingConstants.*;
-
+import static com.cleancode.webcrawler.testutil.TestingConstants.VALID_URL_TO_TEST;
+import static com.cleancode.webcrawler.testutil.TestingConstants.validTestUrl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
