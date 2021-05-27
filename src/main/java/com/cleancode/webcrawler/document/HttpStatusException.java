@@ -20,6 +20,6 @@ public class HttpStatusException extends RuntimeException {
 
     @Override
     public String toString() {
-        return "HTTP " + statusCode + " " + getMessage();
+        return "HTTP " + statusCode + " - " + getMessage();
     }
 }

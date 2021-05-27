@@ -19,7 +19,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
             if (e.getStatusCode() == 404) {
                 throw new Http404StatusException(e.getMessage(), e.getUrl());
             }
-            throw new GetDocumentException(e.getMessage(), e, url);
+            throw new GetDocumentException(new HttpStatusExceptionAdapter(e).toString(), new HttpStatusExceptionAdapter(e), url);
         } catch (IOException e) {
             throw new GetDocumentException(e.getMessage(), e, url);
         }

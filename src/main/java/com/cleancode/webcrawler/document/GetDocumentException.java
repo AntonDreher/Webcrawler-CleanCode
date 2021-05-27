@@ -16,10 +16,9 @@ public class GetDocumentException extends RuntimeException {
 
     @Override
     public String toString() {
-        return String.format("%s: %s caused by %s",
+        return String.format("%s: %s",
                 url.toString(),
-                getMessage(),
-                getCause().toString()
+                getMessage()
         );
     }
 }
