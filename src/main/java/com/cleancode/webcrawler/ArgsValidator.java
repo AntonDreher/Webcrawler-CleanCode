@@ -26,16 +26,23 @@ public class ArgsValidator {
     public List<URL> getUrlsToCrawlFromArgs() {
         List<URL> urlsToCrawl = new ArrayList<>();
 
-        for (String argument : argumentsToCheck) {
-            URL currentURL = getValidUrlFromArgument(argument);
-            if (urlsToCrawl.contains(currentURL)) {
-                System.err.println(argument + " multiple times given");
-                System.exit(1);
+        for (int i = 0; i < argumentsToCheck.length; i++) {
+            if (isNotFileArgument(i)) {
+                String argument = argumentsToCheck[i];
+                URL currentURL = getValidUrlFromArgument(argument);
+                if (urlsToCrawl.contains(currentURL)) {
+                    System.err.println(argument + " multiple times given");
+                    System.exit(1);
+                }
+                urlsToCrawl.add(currentURL);
             }
-            urlsToCrawl.add(currentURL);
         }
 
         return urlsToCrawl;
+    }
+
+    private boolean isNotFileArgument(int i){
+        return i != argumentsToCheck.length - 1 || !isLastParameterFilePath();
     }
 
     private URL getValidUrlFromArgument(String argument) {
