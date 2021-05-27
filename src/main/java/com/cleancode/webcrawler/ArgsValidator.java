@@ -10,43 +10,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArgsValidator {
-    private static String[] argumentsToCheck = null;
+    private final String[] argumentsToCheck;
 
-    static void validateArgsLength() {
+    public ArgsValidator(String[] argumentsToCheck) {
+        this.argumentsToCheck = argumentsToCheck;
+    }
+
+    public void validateArgsLength() {
         if (argumentsToCheck.length < 1) {
             System.err.println("Usage: webcrawler URLs... [FILE]");
             System.exit(1);
         }
     }
 
-    static List<URL> getUrlsToCrawlFromArgs() {
-        ArrayList<URL> urlsToCrawl = new ArrayList<URL>();
+    public List<URL> getUrlsToCrawlFromArgs() {
+        List<URL> urlsToCrawl = new ArrayList<>();
 
-        for(int i=0; i<argumentsToCheck.length; i++) {
-            try {
-                URL currentURL = new URL(argumentsToCheck[i]);
-                if(!urlsToCrawl.contains(currentURL)) {
-                    urlsToCrawl.add(currentURL);
-                }else{
-                    System.err.println(argumentsToCheck[i] + " multiple times given");
-                    System.exit(1);
-                }
-            } catch (MalformedURLException e) {
-                System.err.println("Invalid url at position " +i);
+        for (String argument : argumentsToCheck) {
+            URL currentURL = getValidUrlFromArgument(argument);
+            if (urlsToCrawl.contains(currentURL)) {
+                System.err.println(argument + " multiple times given");
                 System.exit(1);
             }
+            urlsToCrawl.add(currentURL);
         }
+
         return urlsToCrawl;
     }
 
-    public static void setArgumentsToCheck(String[] argumentsToCheck) {
-        ArgsValidator.argumentsToCheck = argumentsToCheck;
+    private URL getValidUrlFromArgument(String argument){
+        try {
+            return new URL(argument);
+        } catch (MalformedURLException e) {
+            System.err.println("Invalid URL: " + argument);
+            System.exit(1);
+        }
+        return null;
     }
 
-    static PrintStream getPrintStreamFromArgs() {
+    public PrintStream getPrintStreamFromArgs() {
         PrintStream output = System.out;
-        int lastPosition = argumentsToCheck.length-1;
-        if(isLastParameterFilePath()){
+        int lastPosition = argumentsToCheck.length - 1;
+        if (isLastParameterFilePath()) {
             try {
                 output = new PrintStream(argumentsToCheck[lastPosition]);
             } catch (FileNotFoundException e) {
@@ -57,11 +62,11 @@ public class ArgsValidator {
         return output;
     }
 
-    static boolean isLastParameterFilePath(){
-        int lastPosition = argumentsToCheck.length-1;
-        try{
+    boolean isLastParameterFilePath() {
+        int lastPosition = argumentsToCheck.length - 1;
+        try {
             Paths.get(argumentsToCheck[lastPosition]);
-        }catch(InvalidPathException | NullPointerException ex){
+        } catch (InvalidPathException | NullPointerException ex) {
             return false;
         }
         return true;

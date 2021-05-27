@@ -1,5 +1,7 @@
 package com.cleancode.webcrawler;
 
+import com.cleancode.webcrawler.testutil.ExitException;
+import com.cleancode.webcrawler.testutil.NoExitSecurityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -51,36 +53,36 @@ public class TestClassArgsValidator {
 
     @Test
     public void testGetUrlsToCrawlFromArgsInvalidURLCallsSystemExit() {
-        ArgsValidator.setArgumentsToCheck(new String[]{invalidURL});
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{invalidURL});
         testSystemExitIsCalledWith(
-                ArgsValidator::getUrlsToCrawlFromArgs,
+                argsValidator::getUrlsToCrawlFromArgs,
                 1
         );
     }
 
     @Test
     public void testGetUrlsToCrawlFromArgsDuplicatedURLCallsSystemExit(){
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validURLGoogle});
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLGoogle});
         testSystemExitIsCalledWith(
-                ArgsValidator::getUrlsToCrawlFromArgs,
+                argsValidator::getUrlsToCrawlFromArgs,
                 1
         );
     }
 
     @Test
     public void testGetUrlsToCrawlFromArgsDuplicatedAndUniqueURLCallsSystemExit(){
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validURLWikipedia, validURLGoogle});
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLWikipedia, validURLGoogle});
         testSystemExitIsCalledWith(
-                ArgsValidator::getUrlsToCrawlFromArgs,
+                argsValidator::getUrlsToCrawlFromArgs,
                 1
         );
     }
 
     @Test
     public void testGetPrintStreamFromArgsInvalidPathCallsSystemExit() {
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, invalidPath});
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, invalidPath});
         testNoSystemExitIsCalled(
-                ArgsValidator::getPrintStreamFromArgs
+                argsValidator::getPrintStreamFromArgs
         );
     }
 
@@ -88,96 +90,96 @@ public class TestClassArgsValidator {
     public void testGetUrlsToCrawlFromArgsValidURL() throws MalformedURLException {
         ArrayList<URL> validURLList = new ArrayList<>();
         validURLList.add(new URL(validURLGoogle));
-        ArgsValidator.setArgumentsToCheck( new String[]{validURLGoogle});
-        testNoSystemExitIsCalled(ArgsValidator::getUrlsToCrawlFromArgs);
-        Assertions.assertEquals(validURLList, ArgsValidator.getUrlsToCrawlFromArgs());
+        ArgsValidator argsValidator = new ArgsValidator( new String[]{validURLGoogle});
+        testNoSystemExitIsCalled(argsValidator::getUrlsToCrawlFromArgs);
+        Assertions.assertEquals(validURLList, argsValidator.getUrlsToCrawlFromArgs());
     }
 
     @Test
     public void testGetPrintStreamFromArgsNoPathSingleURLS() {
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle});
-        testNoSystemExitIsCalled(ArgsValidator::getPrintStreamFromArgs);
-        Assertions.assertEquals(System.out, ArgsValidator.getPrintStreamFromArgs());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle});
+        testNoSystemExitIsCalled(argsValidator::getPrintStreamFromArgs);
+        Assertions.assertEquals(System.out, argsValidator.getPrintStreamFromArgs());
     }
 
     @Test
     public void testGetPrintStreamFromArgsNoPathMultipleURLS() {
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validURLWikipedia});
-        testNoSystemExitIsCalled(ArgsValidator::getPrintStreamFromArgs);
-        Assertions.assertEquals(System.out, ArgsValidator.getPrintStreamFromArgs());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLWikipedia});
+        testNoSystemExitIsCalled(argsValidator::getPrintStreamFromArgs);
+        Assertions.assertEquals(System.out, argsValidator.getPrintStreamFromArgs());
     }
 
     @Test
     public void testGetPrintStreamFromArgsValidPath() {
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validPath});
-        testNoSystemExitIsCalled(ArgsValidator::getPrintStreamFromArgs);
-        Assertions.assertNotNull(ArgsValidator.getPrintStreamFromArgs());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validPath});
+        testNoSystemExitIsCalled(argsValidator::getPrintStreamFromArgs);
+        Assertions.assertNotNull(argsValidator.getPrintStreamFromArgs());
     }
 
     @Test
     public void testValidateArgsLengthNoArguments() {
-        ArgsValidator.setArgumentsToCheck(new String[]{});
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{});
         testSystemExitIsCalledWith(
-                ArgsValidator::validateArgsLength,
+                argsValidator::validateArgsLength,
                 1
         );
     }
 
     @Test
     public void testValidateArgsLengthOneArguments() {
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle});
-        testNoSystemExitIsCalled(ArgsValidator::validateArgsLength);
-        assertDoesNotThrow(() -> ArgsValidator.validateArgsLength());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle});
+        testNoSystemExitIsCalled(argsValidator::validateArgsLength);
+        assertDoesNotThrow(argsValidator::validateArgsLength);
     }
 
     @Test
     public void testValidateArgsLengthTwoArguments() {
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validPath});
-        testNoSystemExitIsCalled(ArgsValidator::validateArgsLength);
-        assertDoesNotThrow(() -> ArgsValidator.validateArgsLength());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validPath});
+        testNoSystemExitIsCalled(argsValidator::validateArgsLength);
+        assertDoesNotThrow(argsValidator::validateArgsLength);
     }
 
     @Test
     public void testValidateArgsLengthThreeArguments() {
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validURLWikipedia, validPath});
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLWikipedia, validPath});
         testNoSystemExitIsCalled(
-                ArgsValidator::validateArgsLength
+                argsValidator::validateArgsLength
         );
-        assertDoesNotThrow(() -> ArgsValidator.validateArgsLength());
+        assertDoesNotThrow(argsValidator::validateArgsLength);
     }
 
     @Test
     public void testIsLastParameterFilePathTwoArgumentsValidPathTrue(){
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validPath});
-        testNoSystemExitIsCalled(ArgsValidator::isLastParameterFilePath);
-        assertTrue(ArgsValidator.isLastParameterFilePath());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validPath});
+        testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
+        assertTrue(argsValidator.isLastParameterFilePath());
     }
 
     @Test
     public void testIsLastParameterFilePathThreeArgumentsValidPathTrue(){
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validURLWikipedia, validPath});
-        testNoSystemExitIsCalled(ArgsValidator::isLastParameterFilePath);
-        assertTrue(ArgsValidator.isLastParameterFilePath());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLWikipedia, validPath});
+        testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
+        assertTrue(argsValidator.isLastParameterFilePath());
     }
 
     @Test
     public void testIsLastParameterFilePathTwoArgumentsFalse(){
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validURLWikipedia});
-        testNoSystemExitIsCalled(ArgsValidator::isLastParameterFilePath);
-        assertFalse(ArgsValidator.isLastParameterFilePath());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validURLWikipedia});
+        testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
+        assertFalse(argsValidator.isLastParameterFilePath());
     }
 
     @Test
     public void testIsLastParameterFilePathThreeArgumentsValidPathFalse(){
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, validPath, validURLWikipedia});
-        testNoSystemExitIsCalled(ArgsValidator::isLastParameterFilePath);
-        assertFalse(ArgsValidator.isLastParameterFilePath());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, validPath, validURLWikipedia});
+        testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
+        assertFalse(argsValidator.isLastParameterFilePath());
     }
 
     @Test
     public void testIsLastParameterFilePathTwoArgumentsInvalidPathFalse(){
-        ArgsValidator.setArgumentsToCheck(new String[]{validURLGoogle, invalidPath});
-        testNoSystemExitIsCalled(ArgsValidator::isLastParameterFilePath);
-        assertFalse(ArgsValidator.isLastParameterFilePath());
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{validURLGoogle, invalidPath});
+        testNoSystemExitIsCalled(argsValidator::isLastParameterFilePath);
+        assertFalse(argsValidator.isLastParameterFilePath());
     }
 }
