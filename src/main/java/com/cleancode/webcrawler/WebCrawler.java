@@ -1,24 +1,25 @@
 package com.cleancode.webcrawler;
 
-import com.cleancode.webcrawler.document.HttpStatusException;
+import com.cleancode.webcrawler.document.GetDocumentException;
+import com.cleancode.webcrawler.document.Http404StatusException;
+import com.cleancode.webcrawler.page.Page;
+import com.cleancode.webcrawler.page.PageFactory;
+import com.cleancode.webcrawler.stats.CrawlerStats;
 
-import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
-public class WebCrawler {
-    private static final int HTTP_NOT_FOUND_STATUS = 404;
-
+public class WebCrawler implements Callable<CrawlerStats> {
     private final URL startUrl;
     private final int maxDepth;
 
     private final Set<URL> visitedUrls = new HashSet<>();
-    private final List<URL> notFoundUrls = new ArrayList<>();
-    private final List<Page> pages = new ArrayList<>();
+    private final CrawlerStats crawlerStats = new CrawlerStats();
+
+    private static PageFactory pageFactory;
 
     public WebCrawler(URL startUrl) {
         this.startUrl = startUrl;
@@ -30,40 +31,33 @@ public class WebCrawler {
         this.maxDepth = maxDepth;
     }
 
+    @Override
+    public CrawlerStats call() {
+        crawl();
+        return crawlerStats;
+    }
+
     public void crawl() {
         crawlRecursive(startUrl, 0);
-    }
-
-    boolean hasExceededMaxDepth(int depth) {
-        return depth > maxDepth;
-    }
-
-    boolean isVisitedUrl(URL url) {
-        return visitedUrls.contains(url);
-    }
-
-    private boolean isNotFoundError(HttpStatusException exception) {
-        return exception.getStatusCode() == HTTP_NOT_FOUND_STATUS;
-    }
-
-    Page getPage(URL url) {
-        try {
-            Page page = new Page(url);
-            page.computePageStatistics();
-            return page;
-        } catch (HttpStatusException e) {
-            if (isNotFoundError(e)) {
-                notFoundUrls.add(url);
-            }
-        } catch (IOException e) {
-        }
-        return null;
     }
 
     private void crawlLinkedPages(Page page, int depth) {
         page.getLinkedUrls().forEach(
                 (linkedUrl) -> crawlRecursive(linkedUrl, depth + 1)
         );
+    }
+
+    Page getPage(URL url){
+        try {
+            Page page = pageFactory.getPageWithStatistics(url);
+            crawlerStats.addPage(page);
+            return page;
+        } catch (Http404StatusException e) {
+            crawlerStats.addNotFoundUrl(url);
+        } catch (GetDocumentException e) {
+            crawlerStats.addCrawlingError(e);
+        }
+        return pageFactory.getInvalidPage();
     }
 
     void crawlRecursive(URL url, int depth) {
@@ -74,38 +68,30 @@ public class WebCrawler {
         visitedUrls.add(url);
 
         Page page = getPage(url);
-        if (page != null) {
-            pages.add(page);
-            crawlLinkedPages(page, depth);
-        }
+        crawlLinkedPages(page, depth);
     }
 
-    private void printValidPageStatsTo(PrintStream outputStream) {
-        outputStream.printf("Stats for " + startUrl.toString() + "%n%n");
-
-        pages.forEach(
-                (page) -> outputStream.println(page.toString())
-        );
+    public static void setPageFactory(PageFactory pageFactory) {
+        WebCrawler.pageFactory = pageFactory;
     }
 
-    private void printBrokenLinksTo(PrintStream outputStream) {
-        outputStream.printf("%nBroken Links%n%n");
-
-        notFoundUrls.forEach(
-                (url) -> outputStream.println(url.toString())
-        );
+    public List<URL> getNotFoundUrls() {
+        return crawlerStats.getNotFoundUrls();
     }
 
-    public synchronized void printStatsTo(PrintStream outputStream) {
-        printValidPageStatsTo(outputStream);
-        printBrokenLinksTo(outputStream);
+    boolean hasExceededMaxDepth(int depth) {
+        return depth > maxDepth;
     }
 
-    List<URL> getNotFoundUrls() {
-        return notFoundUrls;
+    boolean isVisitedUrl(URL url) {
+        return visitedUrls.contains(url);
     }
 
     Set<URL> getVisitedUrls() {
         return visitedUrls;
+    }
+
+    public CrawlerStats getCrawlerStats() {
+        return crawlerStats;
     }
 }

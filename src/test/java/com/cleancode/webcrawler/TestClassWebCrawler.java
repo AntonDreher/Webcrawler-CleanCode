@@ -1,45 +1,34 @@
 package com.cleancode.webcrawler;
 
-import com.cleancode.webcrawler.document.Fake400DocumentFactory;
-import com.cleancode.webcrawler.document.Fake404DocumentFactory;
-import com.cleancode.webcrawler.document.FakeDocumentFactory;
+import com.cleancode.webcrawler.page.Fake400PageFactory;
+import com.cleancode.webcrawler.page.Fake404PageFactory;
+import com.cleancode.webcrawler.page.FakePageFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URL;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import static com.cleancode.webcrawler.testutil.TestingConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestClassWebCrawler {
-    public static final String STANDARD_URL_TO_TEST = "https://www.google.com";
-
-    private URL standardTestUrl;
-
     private WebCrawler crawlerDepthZero;
     private WebCrawler crawlerDepthOne;
     private WebCrawler crawlerDepthTwo;
 
     @BeforeEach
-    public void init() throws IOException {
-        standardTestUrl = new URL(STANDARD_URL_TO_TEST);
-        Page.setDocumentFactory(new FakeDocumentFactory(standardTestUrl));
+    public void init() {
+        WebCrawler.setPageFactory(new FakePageFactory());
 
-        crawlerDepthZero = new WebCrawler(standardTestUrl, 0);
-        crawlerDepthOne = new WebCrawler(standardTestUrl, 1);
-        crawlerDepthTwo = new WebCrawler(standardTestUrl);
+        crawlerDepthZero = new WebCrawler(validTestUrl, 0);
+        crawlerDepthOne = new WebCrawler(validTestUrl, 1);
+        crawlerDepthTwo = new WebCrawler(validTestUrl);
     }
 
     @Test
-    public void testCrawlLinkedPages() throws IOException {
-        crawlerDepthOne = new WebCrawler(standardTestUrl, 1);
+    public void testCrawlLinkedPages() {
+        crawlerDepthOne = new WebCrawler(validTestUrl, 1);
         crawlerDepthOne.crawl();
-        assertTrue(crawlerDepthOne.getVisitedUrls().contains(new URL("https://www.test.at")));
+        assertTrue(crawlerDepthOne.getVisitedUrls().contains(linkedTestUrl));
     }
 
     @Test
@@ -54,75 +43,35 @@ public class TestClassWebCrawler {
 
     @Test
     public void testVisitedURLTrue() {
-        crawlerDepthTwo.crawlRecursive(standardTestUrl, 0);
-        crawlerDepthTwo.crawlRecursive(standardTestUrl, 1);
-        assertTrue(crawlerDepthTwo.isVisitedUrl(standardTestUrl));
+        crawlerDepthTwo.crawlRecursive(validTestUrl, 0);
+        crawlerDepthTwo.crawlRecursive(validTestUrl, 1);
+        assertTrue(crawlerDepthTwo.isVisitedUrl(validTestUrl));
     }
 
     @Test
     public void testVisitedURLFalse() {
-        crawlerDepthZero.crawlRecursive(standardTestUrl, 1);
-        assertFalse(crawlerDepthZero.isVisitedUrl(standardTestUrl));
+        crawlerDepthZero.crawlRecursive(validTestUrl, 1);
+        assertFalse(crawlerDepthZero.isVisitedUrl(validTestUrl));
     }
 
     @Test
-    public void testInvalidURLStatus404() throws IOException {
-        URL invalidURL = new URL("https://www.google.com/not/valid");
-        Page.setDocumentFactory(new Fake404DocumentFactory());
-        crawlerDepthZero = new WebCrawler(invalidURL, 0);
+    public void testInvalidURLStatus404() {
+        WebCrawler.setPageFactory(new Fake404PageFactory());
+        crawlerDepthZero = new WebCrawler(notFoundTestUrl, 0);
 
         crawlerDepthZero.crawl();
 
-        assertTrue(crawlerDepthZero.getNotFoundUrls().contains(invalidURL));
+        assertTrue(crawlerDepthZero.getNotFoundUrls().contains(notFoundTestUrl));
     }
 
     @Test
-    public void testInvalidURLStatus400() throws IOException {
-        URL invalidURL = new URL("https://www.google.com/asdf");
-        Page.setDocumentFactory(new Fake400DocumentFactory());
-        crawlerDepthZero = new WebCrawler(invalidURL, 0);
+    public void testInvalidURLStatus400() {
+        WebCrawler.setPageFactory(new Fake400PageFactory());
+        crawlerDepthZero = new WebCrawler(invalidTestUrl, 0);
 
         crawlerDepthZero.crawl();
 
-        assertFalse(crawlerDepthZero.getNotFoundUrls().contains(invalidURL));
-        assertTrue(crawlerDepthZero.getVisitedUrls().contains(invalidURL));
-    }
-
-    @Test
-    public void testPrintStatsTo() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(outputStream);
-
-        crawlerDepthZero.crawl();
-
-        crawlerDepthZero.printStatsTo(printStream);
-        String expectedOutput = String.format(
-                "Stats for " + STANDARD_URL_TO_TEST + "%n%n" +
-                        "%s: 11 word(s), 3 link(s), 2 image(s), 1 video(s)%n%n" +
-                        "Broken Links%n%n", standardTestUrl
-        );
-        assertEquals(expectedOutput, outputStream.toString());
-    }
-
-    @Test
-    public void testPrintStatsToWithBrokenLink() {
-        Page.setDocumentFactory(new Fake404DocumentFactory());
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(outputStream);
-
-        crawlerDepthZero.crawl();
-
-        crawlerDepthZero.printStatsTo(printStream);
-        String expectedOutput = String.format(
-                "Stats for " + STANDARD_URL_TO_TEST + "%n%n%n" +
-                        "Broken Links%n%n" +
-                        "%s%n", standardTestUrl
-        );
-        assertEquals(expectedOutput, outputStream.toString());
-    }
-
-    @Test
-    public void testCrawlerWithConcurrency(){
-        ExecutorService service = Executors.newFixedThreadPool(10);
+        assertFalse(crawlerDepthZero.getNotFoundUrls().contains(invalidTestUrl));
+        assertTrue(crawlerDepthZero.getVisitedUrls().contains(invalidTestUrl));
     }
 }
