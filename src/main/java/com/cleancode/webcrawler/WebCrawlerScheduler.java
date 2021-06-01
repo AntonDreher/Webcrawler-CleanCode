@@ -33,9 +33,11 @@ public class WebCrawlerScheduler {
         for (Future<CrawlerStats> crawlerStatsFuture : crawlerStatsFutures) {
             try {
                 combinedCrawlerStats.mergeWith(crawlerStatsFuture.get());
-            } catch (ExecutionException | InterruptedException e) {
-                // TODO: find a proper way to handle this
-                e.printStackTrace();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                // Anything that wasn't caught up to this point indicates a serious bug and the program should terminate.
+                throw new RuntimeException(e);
             }
         }
     }
