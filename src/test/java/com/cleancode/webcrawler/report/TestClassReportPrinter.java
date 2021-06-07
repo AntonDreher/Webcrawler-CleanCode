@@ -44,7 +44,7 @@ public class TestClassReportPrinter {
     public void testPrintErrors() {
         printer.printErrors(new FakeCrawlerStats());
         String expectedOutput = String.format(
-                "%nErrors%n%n%s400: FakeException caused by HTTP 400 Bad Request%n", validTestUrl
+                "%nErrors%n%n%s400: FakeException%n", validTestUrl
         );
         assertEquals(expectedOutput, outputStream.toString());
     }
