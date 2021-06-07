@@ -54,7 +54,7 @@ public class TestClassArgsValidator {
 
     @Test
     public void testGetUrlsToCrawlFromArgsInvalidURLCallsSystemExit() {
-        ArgsValidator argsValidator = new ArgsValidator(new String[]{invalidURL});
+        ArgsValidator argsValidator = new ArgsValidator(new String[]{invalidURL, validPath});
         testSystemExitIsCalledWith(
                 argsValidator::getUrlsToCrawlFromArgs,
                 1
